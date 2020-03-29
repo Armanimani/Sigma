@@ -9,7 +9,7 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
-      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "inheritEnvironments": [ "msvc_x64" ],
       "variables": [
         {
           "name": "ENABLE_IPO",
@@ -24,6 +24,29 @@
         {
           "name": "ENABLE_DOXYGEN",
           "value": "False",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "x64-Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "msvc_x64" ],
+      "variables": [
+        {
+          "name": "ENABLE_SANITIZER_ADDRESS",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "ENABLE_IPO",
+          "value": "True",
           "type": "BOOL"
         }
       ]
