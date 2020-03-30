@@ -29,15 +29,13 @@ option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
 # External dependencies
 add_subdirectory(external)
 
+# Engine sources
+add_subdirectory(Sigma)
+
 # Testing 
 option(ENABLE_TESTING "Enable test builds" ON)
 if(ENABLE_TESTING)
 	include(CTest)
-	include(cmake/Testing.cmake)
 	enable_testing()
 	message(STATUS "Building tests")
-	add_subdirectory(test)
 endif()
-
-# Engine sources
-add_subdirectory(src)
