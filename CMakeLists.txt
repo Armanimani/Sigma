@@ -29,9 +29,6 @@ option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
 # External dependencies
 add_subdirectory(external)
 
-# Engine sources
-add_subdirectory(Sigma)
-
 # Testing 
 option(ENABLE_TESTING "Enable test builds" ON)
 if(ENABLE_TESTING)
@@ -39,3 +36,6 @@ if(ENABLE_TESTING)
 	enable_testing()
 	message(STATUS "Building tests")
 endif()
+
+# Engine sources
+add_subdirectory(Sigma)
