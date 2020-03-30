@@ -351,4 +351,4 @@ MigrationBackup/
 
 # Custom folders
 out
-external
+/external/googletest
