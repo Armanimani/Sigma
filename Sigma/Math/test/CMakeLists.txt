@@ -1,6 +1,6 @@
 add_executable(
 	test_math 
-	test_vector.cpp
+	"test_Vector.cpp"
 )
 
 target_link_libraries(
