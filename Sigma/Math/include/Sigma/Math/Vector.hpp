@@ -62,10 +62,15 @@ namespace sigma::math
 		constexpr void set_values(T x, T y) noexcept;
 		constexpr void set_values(T x, T y, T z) noexcept;
 		constexpr void set_values(T x, T y, T z, T w) noexcept;
+
+		[[nodiscard]] constexpr auto get_length() const noexcept;
+		[[nodiscard]] constexpr T get_squared_length() const noexcept;
 		
+		[[nodiscard]] constexpr bool is_normalized() const noexcept;
 		
 		constexpr void negate() noexcept;
 		constexpr void fill(T value) noexcept;
+		constexpr void normalize() noexcept;
 
 		[[nodiscard]] constexpr T& x() noexcept;
 		[[nodiscard]] constexpr T& y() noexcept;
@@ -87,8 +92,12 @@ namespace sigma::math
 		[[nodiscard]] constexpr Vector<T, 2> get_xy() const;	
 		[[nodiscard]] constexpr Vector<T, 3> get_xyz() const;
 		[[nodiscard]] constexpr Vector<T, 3> get_rgb() const;
+
+		static void set_normalized_tolerance(T tolerance) noexcept;
 	private:
 		std::array<T, D> m_data{};
+
+		inline static T m_normalized_tolerance = std::numeric_limits<T>::epsilon() * 10;
 	};
 
 	template <typename T, std::size_t D>
@@ -99,6 +108,12 @@ namespace sigma::math
 		std::array<U, N> buffer{};
 		std::copy(m_data.cbegin(), m_data.cend(), buffer.begin());
 		return Vector<U, N>(buffer);
+	}
+
+	template <typename T, std::size_t D>
+	void Vector<T, D>::set_normalized_tolerance(const T tolerance) noexcept
+	{
+		m_normalized_tolerance = tolerance;
 	}
 
 	template <typename T, std::size_t D>
@@ -358,6 +373,29 @@ namespace sigma::math
 	}
 
 	template <typename T, std::size_t D>
+	constexpr auto Vector<T, D>::get_length() const noexcept
+	{
+		return std::sqrtf(get_squared_length());
+	}
+
+	template <typename T, std::size_t D>
+	constexpr T Vector<T, D>::get_squared_length() const noexcept
+	{
+		return std::reduce(m_data.cbegin(), m_data.cend(), T{},
+			[](auto previous, auto current)
+			{
+				return previous += current * current;
+			}
+		);
+	}
+
+	template <typename T, std::size_t D>
+	constexpr bool Vector<T, D>::is_normalized() const noexcept
+	{
+		return std::abs(get_squared_length() - T{ 1 }) <= m_normalized_tolerance;
+	}
+
+	template <typename T, std::size_t D>
 	constexpr void Vector<T, D>::negate() noexcept
 	{
 		(*this) *= (-1);
@@ -367,6 +405,13 @@ namespace sigma::math
 	constexpr void Vector<T, D>::fill(const T value) noexcept
 	{
 		std::fill(m_data.begin(), m_data.end(), value);
+	}
+
+	template <typename T, std::size_t D>
+	constexpr void Vector<T, D>::normalize() noexcept
+	{
+		const auto length = get_length();
+		(*this) /= length;
 	}
 
 	template <typename T, std::size_t D>

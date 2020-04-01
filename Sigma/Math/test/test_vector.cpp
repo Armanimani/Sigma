@@ -517,3 +517,51 @@ TEST(Vector, SetValues_Four)
 	EXPECT_EQ(vec[2], 12);
 	EXPECT_EQ(vec[3], 13);
 }
+
+TEST(Vector, GetLength)
+{
+	constexpr Vector<short, 3> vec{ 0, 2, 3 };
+
+	EXPECT_FLOAT_EQ(vec.get_length(), std::sqrtf(0 * 0 + 2 * 2 + 3 * 3));
+}
+
+TEST(Vector, GetSquaredLength)
+{
+	constexpr Vector<short, 3> vec{ 0, 2, 3 };
+
+	EXPECT_EQ(vec.get_squared_length(), 0 * 0 + 2 * 2 + 3 * 3);
+}
+
+TEST(Vector, IsNormalized_ExpectTrue)
+{
+	constexpr Vector<float, 2> vec{ 0.6f, 0.8f };
+
+	EXPECT_TRUE(vec.is_normalized());
+}
+
+TEST(Vector, IsNormalized_ExpectFalse)
+{
+	constexpr Vector<float, 2> vec{ 0.6f, 0.8001f };
+
+	EXPECT_FALSE(vec.is_normalized());
+}
+
+TEST(Vector, Normalize_KnownValue)
+{
+	Vector<float, 2> vec{ 6.0f, 8.0f };
+	EXPECT_FALSE(vec.is_normalized());
+
+	vec.normalize();
+	EXPECT_FLOAT_EQ(vec[0], 0.6f);
+	EXPECT_FLOAT_EQ(vec[1], 0.8f);
+	EXPECT_TRUE(vec.is_normalized());
+}
+
+TEST(Vector, Normalize_UnknownValue)
+{
+	Vector<float, 2> vec{ 6.124f, 8.134f };
+	EXPECT_FALSE(vec.is_normalized());
+
+	vec.normalize();
+	EXPECT_TRUE(vec.is_normalized());
+}
