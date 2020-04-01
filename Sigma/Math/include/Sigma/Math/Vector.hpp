@@ -47,15 +47,17 @@ namespace sigma::math
 		[[nodiscard]] constexpr Vector operator*(T other) const;
 		[[nodiscard]] constexpr Vector operator/(T other) const;
 
-		constexpr void operator+=(const Vector& other);
-		constexpr void operator-=(const Vector& other);
-		constexpr void operator*=(const Vector& other);
-		constexpr void operator/=(const Vector& other);
+		constexpr void operator+=(const Vector& other) noexcept;
+		constexpr void operator-=(const Vector& other) noexcept;
+		constexpr void operator*=(const Vector& other) noexcept;
+		constexpr void operator/=(const Vector& other) noexcept;
 
-		constexpr void operator+=(T other);
-		constexpr void operator-=(T other);
-		constexpr void operator*=(T other);
-		constexpr void operator/=(T other);
+		constexpr void operator+=(T other) noexcept;
+		constexpr void operator-=(T other) noexcept;
+		constexpr void operator*=(T other) noexcept;
+		constexpr void operator/=(T other) noexcept;
+
+		[[nodiscard]] constexpr Vector operator-() const;
 
 		[[nodiscard]] constexpr T& x() noexcept;
 		[[nodiscard]] constexpr T& y() noexcept;
@@ -250,31 +252,31 @@ namespace sigma::math
 	}
 
 	template <typename T, std::size_t D>
-	constexpr void Vector<T, D>::operator+=(const Vector& other)
+	constexpr void Vector<T, D>::operator+=(const Vector& other) noexcept
 	{
 		std::transform(m_data.cbegin(), m_data.cend(), other.m_data.cbegin(), m_data.begin(), std::plus<T>());
 	}
 
 	template <typename T, std::size_t D>
-	constexpr void Vector<T, D>::operator-=(const Vector& other)
+	constexpr void Vector<T, D>::operator-=(const Vector& other) noexcept
 	{
 		std::transform(m_data.cbegin(), m_data.cend(), other.m_data.cbegin(), m_data.begin(), std::minus<T>());
 	}
 
 	template <typename T, std::size_t D>
-	constexpr void Vector<T, D>::operator*=(const Vector& other)
+	constexpr void Vector<T, D>::operator*=(const Vector& other) noexcept
 	{
 		std::transform(m_data.cbegin(), m_data.cend(), other.m_data.cbegin(), m_data.begin(), std::multiplies<T>());
 	}
 
 	template <typename T, std::size_t D>
-	constexpr void Vector<T, D>::operator/=(const Vector& other)
+	constexpr void Vector<T, D>::operator/=(const Vector& other) noexcept
 	{
 		std::transform(m_data.cbegin(), m_data.cend(), other.m_data.cbegin(), m_data.begin(), std::divides<T>());
 	}
 
 	template <typename T, std::size_t D>
-	constexpr void Vector<T, D>::operator+=(const T other)
+	constexpr void Vector<T, D>::operator+=(const T other) noexcept
 	{
 		std::transform(m_data.cbegin(), m_data.cend(), m_data.begin(),
 			[=](const T value)
@@ -285,7 +287,7 @@ namespace sigma::math
 	}
 
 	template <typename T, std::size_t D>
-	constexpr void Vector<T, D>::operator-=(const T other)
+	constexpr void Vector<T, D>::operator-=(const T other) noexcept
 	{
 		std::transform(m_data.cbegin(), m_data.cend(), m_data.begin(),
 			[=](const T value)
@@ -296,7 +298,7 @@ namespace sigma::math
 	}
 
 	template <typename T, std::size_t D>
-	constexpr void Vector<T, D>::operator*=(const T other)
+	constexpr void Vector<T, D>::operator*=(const T other) noexcept
 	{
 		std::transform(m_data.cbegin(), m_data.cend(), m_data.begin(),
 			[=](const T value)
@@ -307,7 +309,7 @@ namespace sigma::math
 	}
 
 	template <typename T, std::size_t D>
-	constexpr void Vector<T, D>::operator/=(const T other)
+	constexpr void Vector<T, D>::operator/=(const T other) noexcept
 	{
 		std::transform(m_data.cbegin(), m_data.cend(), m_data.begin(),
 			[=](const T value)
@@ -315,6 +317,12 @@ namespace sigma::math
 				return value / other;
 			}
 		);
+	}
+
+	template <typename T, std::size_t D>
+	constexpr Vector<T, D> Vector<T, D>::operator-() const
+	{
+		return (*this) * -1;
 	}
 
 	template <typename T, std::size_t D>
