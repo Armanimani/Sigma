@@ -2,6 +2,7 @@
 
 #include <array>
 #include <numeric>
+#include <limits>
 
 
 namespace sigma::math
@@ -9,25 +10,32 @@ namespace sigma::math
 	template <typename T, std::size_t D>
 	class Vector
 	{
-		static_assert(D > 0);
+		static_assert(D >= 2);
 	public:
-		using value_type = T;
+		using value_type = T;	
 		constexpr static std::size_t k_dimension = D;
+
+		template<typename U, std::size_t N>
+		friend class Vector;
 
 		constexpr Vector() = default;
 		constexpr explicit Vector(T fill_value);
+		constexpr explicit Vector(const std::array<T, D>& data);
 		constexpr Vector(T x, T y);
 		constexpr Vector(T x, T y, T z);
 		constexpr Vector(T x, T y, T z, T w);
 
-		constexpr Vector(const Vector&) = default;
-		constexpr Vector(Vector&& other) noexcept = default;
-		constexpr Vector& operator=(const Vector& other) = default;
-		constexpr Vector& operator=(Vector&& other) noexcept = default;
-		~Vector() = default;
-
+		template<typename U, std::size_t N>
+		operator Vector<U, N>() const;
+		
 		[[nodiscard]] constexpr T& operator[](std::size_t index) noexcept;
 		[[nodiscard]] constexpr const T& operator[](std::size_t index) const noexcept;
+
+		[[nodiscard]] constexpr T& operator()(std::size_t index) noexcept;
+		[[nodiscard]] constexpr const T& operator()(std::size_t index) const noexcept;
+
+		constexpr bool operator==(const Vector& other) const noexcept;
+		constexpr bool operator!=(const Vector& other) const noexcept;
 
 		[[nodiscard]] constexpr T& x() noexcept;
 		[[nodiscard]] constexpr T& y() noexcept;
@@ -45,11 +53,24 @@ namespace sigma::math
 		[[nodiscard]] constexpr const T& g() const noexcept;
 		[[nodiscard]] constexpr const T& b() const noexcept;
 		[[nodiscard]] constexpr const T& a() const noexcept;
+
+		[[nodiscard]] constexpr Vector<T, 2> get_xy() const;	
+		[[nodiscard]] constexpr Vector<T, 3> get_xyz() const;
+		[[nodiscard]] constexpr Vector<T, 3> get_rgb() const;
 	private:
 		std::array<T, D> m_data{};
 	};
 
-	
+	template <typename T, std::size_t D>
+	template <typename U, std::size_t N>
+	Vector<T, D>::operator Vector<U, N>() const
+	{
+		static_assert(D <= N);
+		std::array<U, N> buffer{};
+		std::copy(m_data.cbegin(), m_data.cend(), buffer.begin());
+		return Vector<U, N>(buffer);
+	}
+
 	template <typename T, std::size_t D>
 	constexpr Vector<T, D>::Vector(T fill_value)
 	{
@@ -57,11 +78,12 @@ namespace sigma::math
 	}
 
 	template <typename T, std::size_t D>
+	constexpr Vector<T, D>::Vector(const std::array<T, D>& data)
+		: m_data{ data } {}
+
+	template <typename T, std::size_t D>
 	constexpr Vector<T, D>::Vector(const T x, const T y)
-		: m_data{x, y}
-	{
-		static_assert(D >= 2);
-	}
+		: m_data{x, y} {}
 
 	template <typename T, std::size_t D>
 	constexpr Vector<T, D>::Vector(const T x, const T y, const T z)
@@ -76,18 +98,51 @@ namespace sigma::math
 	{
 		static_assert(D >= 4);
 	}
-
-
+	
 	template <typename T, std::size_t D>
 	constexpr T& Vector<T, D>::operator[](const std::size_t index) noexcept
 	{
+		assert(index < D);
 		return m_data[index];
 	}
 
 	template <typename T, std::size_t D>
 	constexpr const T& Vector<T, D>::operator[](const std::size_t index) const noexcept
 	{
+		assert(index < D);
 		return m_data[index];
+	}
+
+	template <typename T, std::size_t D>
+	constexpr T& Vector<T, D>::operator()(std::size_t index) noexcept
+	{
+		assert(index < D);
+		return m_data[index];
+	}
+
+	template <typename T, std::size_t D>
+	constexpr const T& Vector<T, D>::operator()(std::size_t index) const noexcept
+	{
+		assert(index < D);
+		return m_data[index];
+	}
+
+	template <typename T, std::size_t D>
+	constexpr bool Vector<T, D>::operator==(const Vector& other) const noexcept
+	{
+		constexpr auto tolerance = std::numeric_limits<T>::epsilon();
+		return std::equal(m_data.cbegin(), m_data.cend(), other.m_data.cbegin(),
+			[=](const auto first_element, const auto second_element)
+			{
+				return std::abs(first_element - second_element) <= tolerance;
+			}
+		);
+	}
+
+	template <typename T, std::size_t D>
+	constexpr bool Vector<T, D>::operator!=(const Vector& other) const noexcept
+	{
+		return !(*this == other);
 	}
 
 	template <typename T, std::size_t D>
@@ -99,7 +154,6 @@ namespace sigma::math
 	template <typename T, std::size_t D>
 	constexpr T& Vector<T, D>::y() noexcept
 	{
-		static_assert(D >= 2);
 		return m_data[1];
 	}
 
@@ -126,7 +180,6 @@ namespace sigma::math
 	template <typename T, std::size_t D>
 	constexpr const T& Vector<T, D>::y() const noexcept
 	{
-		static_assert(D >= 2);
 		return m_data[1];
 	}
 
@@ -153,7 +206,6 @@ namespace sigma::math
 	template <typename T, std::size_t D>
 	constexpr T& Vector<T, D>::g() noexcept
 	{
-		static_assert(D >= 2);
 		return m_data[1];
 	}
 
@@ -180,7 +232,6 @@ namespace sigma::math
 	template <typename T, std::size_t D>
 	constexpr const T& Vector<T, D>::g() const noexcept
 	{
-		static_assert(D >= 2);
 		return m_data[1];
 	}
 
@@ -196,5 +247,25 @@ namespace sigma::math
 	{
 		static_assert(D >= 4);
 		return m_data[3];
+	}
+
+	template <typename T, std::size_t D>
+	constexpr Vector<T, 2> Vector<T, D>::get_xy() const
+	{
+		return { m_data[0], m_data[1] };
+	}
+
+	template <typename T, std::size_t D>
+	constexpr Vector<T, 3> Vector<T, D>::get_xyz() const
+	{
+		static_assert(D >= 3);
+		return { m_data[0], m_data[1], m_data[2] };
+	}
+
+	template <typename T, std::size_t D>
+	constexpr Vector<T, 3> Vector<T, D>::get_rgb() const
+	{
+		static_assert(D >= 3);
+		return { m_data[0], m_data[1], m_data[2] };
 	}
 }

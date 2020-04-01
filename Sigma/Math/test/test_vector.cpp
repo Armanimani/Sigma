@@ -20,6 +20,14 @@ TEST(Vector, Constructor_Fill)
 	EXPECT_EQ(vec[1], 10);
 }
 
+TEST(Vector, Constructor_Array)
+{
+	constexpr Vector<int, 2> vec{ std::array<int, 2> {10, 11}};
+
+	EXPECT_EQ(vec[0], 10);
+	EXPECT_EQ(vec[1], 11);
+}
+
 TEST(Vector, Constructor_TwoValue)
 {
 	constexpr Vector<int, 2> vec{ 10, 11 };
@@ -67,6 +75,102 @@ TEST(Vector, OperatorBracket_NonConst)
 	
 	EXPECT_EQ(vec[0], 2);
 	EXPECT_EQ(vec[1], 5);
+}
+
+TEST(Vector, OperatorCall_Const)
+{
+	constexpr Vector<int, 2> vec{ 10, 11 };
+
+	EXPECT_EQ(vec(0), 10);
+	EXPECT_EQ(vec(1), 11);
+}
+
+TEST(Vector, OperatorCall_NonConst)
+{
+	Vector<int, 2> vec{ 10, 11 };
+
+	EXPECT_EQ(vec(0), 10);
+	EXPECT_EQ(vec(1), 11);
+
+	vec(0) = 2;
+	vec(1) = 5;
+
+	EXPECT_EQ(vec(0), 2);
+	EXPECT_EQ(vec(1), 5);
+}
+
+TEST(Vector, OperatorEqual_Integer)
+{
+	constexpr Vector<int, 2> first{ 10, 12 };
+	constexpr Vector<int, 2> second{ 10, 12 };
+
+	EXPECT_TRUE(first == second);
+	EXPECT_FALSE(first != second);
+}
+
+TEST(Vector, OperatorNotEqual_Integer)
+{
+	constexpr Vector<int, 2> first{ 10, 12 };
+	constexpr Vector<int, 2> second{ 10, 13 };
+
+	EXPECT_TRUE(first != second);
+	EXPECT_FALSE(first == second);
+}
+
+TEST(Vector, OperatorEqual_Float)
+{
+	constexpr Vector <float , 2 > first{ 10.0f, 12.0f };
+	constexpr Vector<float, 2> second{ 10.0f, 12.0f };
+
+	EXPECT_TRUE(first == second);
+	EXPECT_FALSE(first != second);
+}
+
+TEST(Vector, OperatorNotEqual_Float)
+{
+	constexpr Vector <float, 2 > first{ 10.0f, 12.0f };
+	constexpr Vector<float, 2> second{ 10.0001f, 12.0f };
+
+	EXPECT_TRUE(first != second);
+	EXPECT_FALSE(first == second);
+}
+
+TEST(Vector, OperatorAssignment_Vector_SameSize_SameType)
+{
+	constexpr Vector<int, 2> source{ 10, 11 };
+	constexpr auto target{ source };
+	
+	EXPECT_EQ(target[0], 10);
+	EXPECT_EQ(target[1], 11);
+}
+
+TEST(Vector, OperatorAssignment_Vector_SmallerSize_SameType)
+{
+	constexpr Vector<int, 3> source{ 10, 11, 10 };
+	Vector<int, 3> target = source.get_xy();
+	
+	EXPECT_EQ(target[0], 10);
+	EXPECT_EQ(target[1], 11);
+	EXPECT_EQ(target[2], 0);
+}
+
+TEST(Vector, OperatorAssignment_Vector_SameSize_DifferentType)
+{
+	constexpr Vector<int16_t, 2> source{ 10, 11 };
+	Vector<float, 2> target = source;
+	
+	EXPECT_FLOAT_EQ(target[0], 10.0f);
+	EXPECT_FLOAT_EQ(target[1], 11.0f);
+}
+
+TEST(Vector, OperatorAssignment_Vector_SmallerSize_DifferentType)
+{
+	constexpr Vector<int16_t, 3> source{ 10, 11, 13 };
+	Vector<float, 2> target = source.get_xy();
+
+	EXPECT_FLOAT_EQ(target[0], 10.0f);
+	EXPECT_FLOAT_EQ(target[1], 11.0f);
+	EXPECT_FLOAT_EQ(target[2], 0.0f);
 }
 
 TEST(Vector, CopyConstructor)
@@ -163,4 +267,33 @@ TEST(Vector, NonConstAccessorsRGBA_NonConst)
 	EXPECT_EQ(source.g(), 21);
 	EXPECT_EQ(source.b(), 22);
 	EXPECT_EQ(source.a(), 23);
+}
+
+TEST(Vector, SliceXY)
+{
+	constexpr Vector<int, 4> source{ 10, 11, 12, 13 };
+	const auto target{ source.get_xy() };
+
+	EXPECT_EQ(target.x(), 10);
+	EXPECT_EQ(target.y(), 11);
+}
+
+TEST(Vector, SliceXYZ)
+{
+	constexpr Vector<int, 4> source{ 10, 11, 12, 13 };
+	const auto target{ source.get_xyz() };
+
+	EXPECT_EQ(target.x(), 10);
+	EXPECT_EQ(target.y(), 11);
+	EXPECT_EQ(target.z(), 12);
+}
+
+TEST(Vector, SliceRGB)
+{
+	constexpr Vector<int, 4> source{ 10, 11, 12, 13 };
+	const auto target{ source.get_rgb() };
+
+	EXPECT_EQ(target.r(), 10);
+	EXPECT_EQ(target.g(), 11);
+	EXPECT_EQ(target.b(), 12);
 }
