@@ -166,7 +166,7 @@ TEST(Vector, OperatorAssignment_Vector_SameSize_DifferentType)
 TEST(Vector, OperatorAssignment_Vector_SmallerSize_DifferentType)
 {
 	constexpr Vector<int16_t, 3> source{ 10, 11, 13 };
-	Vector<float, 2> target = source.get_xy();
+	Vector<float, 3> target = source.get_xy();
 
 	EXPECT_FLOAT_EQ(target[0], 10.0f);
 	EXPECT_FLOAT_EQ(target[1], 11.0f);
@@ -239,7 +239,7 @@ TEST(Vector, AccessorsXYZW_NonConst)
 	EXPECT_EQ(source.w(), 23);
 }
 
-TEST(Vector, AccessorsRGBA_CONST)
+TEST(Vector, AccessorsRGBA_Const)
 {
 	constexpr Vector<int, 4> source{ 10, 11, 12, 13 };
 
@@ -296,4 +296,164 @@ TEST(Vector, SliceRGB)
 	EXPECT_EQ(target.r(), 10);
 	EXPECT_EQ(target.g(), 11);
 	EXPECT_EQ(target.b(), 12);
+}
+
+TEST(Vector, Operator_Plus_Vector)
+{
+	constexpr Vector<int, 2> lhs{ 1, 2 };
+	constexpr Vector<int, 2> rhs{ 3, 4 };
+	const auto result = lhs + rhs;
+
+	EXPECT_EQ(result[0], 1 + 3);
+	EXPECT_EQ(result[1], 2 + 4);
+}
+
+TEST(Vector, Operator_Minus_Vector)
+{
+	constexpr Vector<int, 2> lhs{ 1, 2 };
+	constexpr Vector<int, 2> rhs{ 3, 4 };
+	const auto result = lhs - rhs;
+
+	EXPECT_EQ(result[0], 1 - 3);
+	EXPECT_EQ(result[1], 2 - 4);
+}
+
+TEST(Vector, Operator_Multiply_Vector)
+{
+	constexpr Vector<int, 2> lhs{ 1, 2 };
+	constexpr Vector<int, 2> rhs{ 3, 4 };
+	const auto result = lhs * rhs;
+
+	EXPECT_EQ(result[0], 1 * 3);
+	EXPECT_EQ(result[1], 2 * 4);
+}
+
+TEST(Vector, Operator_Divide_Vector)
+{
+	constexpr Vector<float, 2> lhs{ 1.0f, 2.0f };
+	constexpr Vector<float, 2> rhs{ 3.0f, 4.0f };
+	const auto result = lhs / rhs;
+
+	EXPECT_FLOAT_EQ(result[0], 1.0f / 3.0f);
+	EXPECT_FLOAT_EQ(result[1], 2.0f / 4.0f);
+}
+
+TEST(Vector, Operator_Plus_Type)
+{
+	constexpr Vector<int, 2> lhs{ 1, 2 };
+	constexpr auto rhs = 2;
+	const auto result = lhs + rhs;
+
+	EXPECT_EQ(result[0], 1 + 2);
+	EXPECT_EQ(result[1], 2 + 2);
+}
+
+TEST(Vector, Operator_Minus_Type)
+{
+	constexpr Vector<int, 2> lhs{ 1, 2 };
+	constexpr auto rhs = 2;
+	const auto result = lhs - rhs;
+
+	EXPECT_EQ(result[0], 1 - 2);
+	EXPECT_EQ(result[1], 2 - 2);
+}
+
+TEST(Vector, Operator_Multiply_Type)
+{
+	constexpr Vector<int, 2> lhs{ 1, 2 };
+	constexpr auto rhs = 2;
+	const auto result = lhs * rhs;
+
+	EXPECT_EQ(result[0], 1 * 2);
+	EXPECT_EQ(result[1], 2 * 2);
+}
+
+TEST(Vector, Operator_Divide_Type)
+{
+	constexpr Vector<float, 2> lhs{ 1.0f, 2.0f };
+	constexpr auto rhs = 2.0f;
+	const auto result = lhs / rhs;
+
+	EXPECT_FLOAT_EQ(result[0], 1.0f / 2.0f);
+	EXPECT_FLOAT_EQ(result[1], 2.0f / 2.0f);
+}
+
+TEST(Vector, Operator_PlusEqual_Vector)
+{
+	Vector<int, 2> vec{ 1, 2 };
+	constexpr Vector<int, 2> other{ 3, 4 };
+	vec += other;
+
+	EXPECT_EQ(vec[0], 1 + 3);
+	EXPECT_EQ(vec[1], 2 + 4);
+}
+
+TEST(Vector, Operator_MinusEqual_Vector)
+{
+	Vector<int, 2> vec{ 1, 2 };
+	constexpr Vector<int, 2> other{ 3, 4 };
+	vec -= other;
+
+	EXPECT_EQ(vec[0], 1 - 3);
+	EXPECT_EQ(vec[1], 2 - 4);
+}
+
+TEST(Vector, Operator_MultiplyEqual_Vector)
+{
+	Vector<int, 2> vec{ 1, 2 };
+	constexpr Vector<int, 2> other{ 3, 4 };
+	vec *= other;
+
+	EXPECT_EQ(vec[0], 1 * 3);
+	EXPECT_EQ(vec[1], 2 * 4);
+}
+
+TEST(Vector, Operator_DivideEqual_Vector)
+{
+	Vector<float, 2> vec{ 1.0f, 2.0f };
+	constexpr Vector<float, 2> other{ 3.0f, 4.0f };
+	vec /= other;
+
+	EXPECT_FLOAT_EQ(vec[0], 1.0f / 3.0f);
+	EXPECT_FLOAT_EQ(vec[1], 2.0f / 4.0f);
+}
+
+TEST(Vector, Operator_PlusEqual_Type)
+{
+	Vector<int, 2> vec{ 1, 2 };
+	constexpr auto other = 2;
+	vec += other;
+
+	EXPECT_EQ(vec[0], 1 + 2);
+	EXPECT_EQ(vec[1], 2 + 2);
+}
+
+TEST(Vector, Operator_MinusEqual_Type)
+{
+	Vector<int, 2> vec{ 1, 2 };
+	constexpr auto other = 2;
+	vec -= other;
+
+	EXPECT_EQ(vec[0], 1 - 2);
+	EXPECT_EQ(vec[1], 2 - 2);
+}
+
+TEST(Vector, Operator_MultiplyEqual_Type)
+{
+	Vector<int, 2> vec{ 1, 2 };
+	constexpr auto other = 2;
+	vec *= other;
+
+	EXPECT_EQ(vec[0], 1 * 2);
+	EXPECT_EQ(vec[1], 2 * 2);
+}
+
+TEST(Vector, Operator_DivideEqual_Type)
+{
+	Vector<float, 2> vec{ 1.0f, 2.0f };
+	constexpr auto other = 2.0f;
+	vec /= other;
+
+	EXPECT_FLOAT_EQ(vec[0], 1.0f / 2.0f);
+	EXPECT_FLOAT_EQ(vec[1], 2.0f / 2.0f);
 }
