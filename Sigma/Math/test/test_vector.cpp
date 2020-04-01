@@ -457,3 +457,63 @@ TEST(Vector, Operator_DivideEqual_Type)
 	EXPECT_FLOAT_EQ(vec[0], 1.0f / 2.0f);
 	EXPECT_FLOAT_EQ(vec[1], 2.0f / 2.0f);
 }
+
+TEST(Vector, Operator_Minus)
+{
+	constexpr Vector<int, 2> vec{ 1, 2 };
+	constexpr auto other = -vec;
+
+	EXPECT_EQ(other[0], -1);
+	EXPECT_EQ(other[1], -2);
+}
+
+TEST(Vector, Negate)
+{
+	Vector<int, 2> vec{ 1, 2 };
+	vec.negate();
+
+	EXPECT_EQ(vec[0], -1);
+	EXPECT_EQ(vec[1], -2);
+}
+
+TEST(Vector, Fill)
+{
+	Vector<int, 2> vec{ 1, 2 };
+	vec.fill(11);
+
+	EXPECT_EQ(vec[0], 11);
+	EXPECT_EQ(vec[1], 11);
+}
+
+TEST(Vector, SetValues_Two)
+{
+	Vector<int, 4> vec{ 1, 2, 3, 4 };
+	vec.set_values(10, 11);
+
+	EXPECT_EQ(vec[0], 10);
+	EXPECT_EQ(vec[1], 11);
+	EXPECT_EQ(vec[2], 3);
+	EXPECT_EQ(vec[3], 4);
+}
+
+TEST(Vector, SetValues_Three)
+{
+	Vector<int, 4> vec{ 1, 2, 3, 4 };
+	vec.set_values(10, 11, 12);
+
+	EXPECT_EQ(vec[0], 10);
+	EXPECT_EQ(vec[1], 11);
+	EXPECT_EQ(vec[2], 12);
+	EXPECT_EQ(vec[3], 4);
+}
+
+TEST(Vector, SetValues_Four)
+{
+	Vector<int, 4> vec{ 1, 2, 3, 4 };
+	vec.set_values(10, 11, 12, 13);
+
+	EXPECT_EQ(vec[0], 10);
+	EXPECT_EQ(vec[1], 11);
+	EXPECT_EQ(vec[2], 12);
+	EXPECT_EQ(vec[3], 13);
+}

@@ -59,6 +59,14 @@ namespace sigma::math
 
 		[[nodiscard]] constexpr Vector operator-() const;
 
+		constexpr void set_values(T x, T y) noexcept;
+		constexpr void set_values(T x, T y, T z) noexcept;
+		constexpr void set_values(T x, T y, T z, T w) noexcept;
+		
+		
+		constexpr void negate() noexcept;
+		constexpr void fill(T value) noexcept;
+
 		[[nodiscard]] constexpr T& x() noexcept;
 		[[nodiscard]] constexpr T& y() noexcept;
 		[[nodiscard]] constexpr T& z() noexcept;
@@ -323,6 +331,42 @@ namespace sigma::math
 	constexpr Vector<T, D> Vector<T, D>::operator-() const
 	{
 		return (*this) * -1;
+	}
+
+	template <typename T, std::size_t D>
+	constexpr void Vector<T, D>::set_values(const T x, const T y) noexcept
+	{
+		m_data[0] = x;
+		m_data[1] = y;
+	}
+
+	template <typename T, std::size_t D>
+	constexpr void Vector<T, D>::set_values(const T x, const T y, const T z) noexcept
+	{
+		m_data[0] = x;
+		m_data[1] = y;
+		m_data[2] = z;
+	}
+
+	template <typename T, std::size_t D>
+	constexpr void Vector<T, D>::set_values(const T x, const T y, const T z, const T w) noexcept
+	{
+		m_data[0] = x;
+		m_data[1] = y;
+		m_data[2] = z;
+		m_data[3] = w;
+	}
+
+	template <typename T, std::size_t D>
+	constexpr void Vector<T, D>::negate() noexcept
+	{
+		(*this) *= (-1);
+	}
+
+	template <typename T, std::size_t D>
+	constexpr void Vector<T, D>::fill(const T value) noexcept
+	{
+		std::fill(m_data.begin(), m_data.end(), value);
 	}
 
 	template <typename T, std::size_t D>
