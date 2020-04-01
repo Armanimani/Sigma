@@ -37,15 +37,15 @@ namespace sigma::math
 		constexpr bool operator==(const Vector& other) const noexcept;
 		constexpr bool operator!=(const Vector& other) const noexcept;
 
-		constexpr Vector operator+(const Vector& other) const;
-		constexpr Vector operator-(const Vector& other) const;
-		constexpr Vector operator*(const Vector& other) const;
-		constexpr Vector operator/(const Vector& other) const;
+		[[nodiscard]] constexpr Vector operator+(const Vector& other) const;
+		[[nodiscard]] constexpr Vector operator-(const Vector& other) const;
+		[[nodiscard]] constexpr Vector operator*(const Vector& other) const;
+		[[nodiscard]] constexpr Vector operator/(const Vector& other) const;
 		
-		constexpr Vector operator+(T other) const;
-		constexpr Vector operator-(T other) const;
-		constexpr Vector operator*(T other) const;
-		constexpr Vector operator/(T other) const;
+		[[nodiscard]] constexpr Vector operator+(T other) const;
+		[[nodiscard]] constexpr Vector operator-(T other) const;
+		[[nodiscard]] constexpr Vector operator*(T other) const;
+		[[nodiscard]] constexpr Vector operator/(T other) const;
 
 		constexpr void operator+=(const Vector& other);
 		constexpr void operator-=(const Vector& other);
