@@ -565,3 +565,31 @@ TEST(Vector, Normalize_UnknownValue)
 	vec.normalize();
 	EXPECT_TRUE(vec.is_normalized());
 }
+
+TEST(Vector, GeDistance)
+{
+	constexpr Vector<float, 3> vec{ 0.0f, 2.0f, 3.0f };
+	constexpr Vector<float, 3> other{ 1.0f, -2.0f, 3.0f };
+
+	constexpr auto expected_squared_length =
+		(vec[0] - other[0]) * (vec[0] - other[0]) +
+		(vec[1] - other[1]) * (vec[1] - other[1]) +
+		(vec[2] - other[2]) * (vec[2] - other[2]);
+
+	EXPECT_FLOAT_EQ(vec.get_distance(other), std::sqrt(expected_squared_length));
+	EXPECT_FLOAT_EQ(other.get_distance(vec), std::sqrt(expected_squared_length));
+}
+
+TEST(Vector, GetSquaredDistance)
+{
+	constexpr Vector<float, 3> vec{ 0.0f, 2.0f, 3.0f };
+	constexpr Vector<float, 3> other{ 1.0f, -2.0f, 3.0f };
+
+	const auto expected_squared_length =
+		(vec[0] - other[0]) * (vec[0] - other[0]) +
+		(vec[1] - other[1]) * (vec[1] - other[1]) +
+		(vec[2] - other[2]) * (vec[2] - other[2]);
+
+	EXPECT_FLOAT_EQ(vec.get_squared_distance(other), expected_squared_length);
+	EXPECT_FLOAT_EQ(other.get_squared_distance(vec), expected_squared_length);
+}

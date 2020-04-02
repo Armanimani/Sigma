@@ -65,6 +65,8 @@ namespace sigma::math
 
 		[[nodiscard]] constexpr auto get_length() const noexcept;
 		[[nodiscard]] constexpr T get_squared_length() const noexcept;
+		[[nodiscard]] constexpr auto get_distance(const Vector& other) const noexcept;
+		[[nodiscard]] constexpr T get_squared_distance(const Vector& other) const noexcept;
 		
 		[[nodiscard]] constexpr bool is_normalized() const noexcept;
 		
@@ -388,6 +390,24 @@ namespace sigma::math
 			}
 		);
 	}
+
+	template <typename T, std::size_t D>
+	constexpr auto Vector<T, D>::get_distance(const Vector& other) const noexcept
+	{
+		return std::sqrtf(get_squared_distance(other));
+	}
+
+	template <typename T, std::size_t D>
+	constexpr T Vector<T, D>::get_squared_distance(const Vector& other) const noexcept
+	{
+		return std::inner_product(m_data.cbegin(), m_data.cend(), other.m_data.cbegin(), T{}, std::plus<T>(),
+			[](const auto element, const auto other_element)
+			{
+				return (element - other_element) * (element - other_element);
+			}
+		);
+	}
+
 
 	template <typename T, std::size_t D>
 	constexpr bool Vector<T, D>::is_normalized() const noexcept
