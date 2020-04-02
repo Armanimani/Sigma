@@ -19,7 +19,7 @@ jobs:
       
       - name: Configure
         run: |
-          mkdir build-@v1 
+          mkdir build
           cd build 
           cmake ..
     
