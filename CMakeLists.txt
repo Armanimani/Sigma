@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-project(Sigma CXX)
+project(sigma CXX)
 include(cmake/StandardProjectSettings.cmake)
 
 # Link to this 'Library' to set the C++ standard / compile time options requested
@@ -26,9 +26,13 @@ enable_doxygen()
 
 option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
 
+# External dependencies
+add_subdirectory(external)
+
 # Testing 
 option(ENABLE_TESTING "Enable test builds" ON)
 if(ENABLE_TESTING)
+	include(CTest)
 	enable_testing()
 	message(STATUS "Building tests")
 endif()
