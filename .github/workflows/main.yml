@@ -15,8 +15,11 @@ jobs:
         configuration: [Debug, Release]
         
     steps: 
-      - name: setup-msbuild
-        uses: microsoft/setup-msbuild@v16.6.0
+      - name: Setup MSBuild
+        id: setup_msbuild
+        uses: ./
+        with:
+          vs-version: "[16.4,16.6]"
 
       - name: Checkout repository
         uses: actions/checkout@v2.1.0
