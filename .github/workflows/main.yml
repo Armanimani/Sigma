@@ -11,15 +11,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macOS-latest]
+        os: [windows-latest]
         configuration: [Debug, Release]
         
     steps: 
       - name: Checkout repository
         uses: actions/checkout@v2.1.0
-        
-      - name: Checkout submodules
-        uses: textbook/git-checkout-submodule-action@2.1.1
+        with:
+          submodules: recursive
 
       - name: Configure
         run: |
