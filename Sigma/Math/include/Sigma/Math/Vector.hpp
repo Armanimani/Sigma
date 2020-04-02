@@ -25,8 +25,7 @@ namespace sigma::math
 		constexpr Vector(T x, T y, T z);
 		constexpr Vector(T x, T y, T z, T w);
 
-		template <typename U, std::size_t N,
-			std::enable_if_t< (D <= N) >* = nullptr>
+		template <typename U, std::size_t N, std::enable_if_t< (D <= N) >* = nullptr>
 		operator Vector<U, N>() const;
 		
 		[[nodiscard]] constexpr T& operator[](std::size_t index) noexcept;
@@ -72,6 +71,11 @@ namespace sigma::math
 		[[nodiscard]] constexpr std::pair<T, T> find_min_max_element() const noexcept;
 		[[nodiscard]] constexpr T find_min_element() const noexcept;
 		[[nodiscard]] constexpr T find_max_element() const noexcept;
+		
+		[[nodiscard]] constexpr T dot(const Vector& other) const noexcept;
+
+		template <std::size_t N, std::enable_if_t<N == 3>* = nullptr>
+		[[nodiscard]] constexpr Vector<T, N> cross(const Vector<T, N>& other) const noexcept;
 		
 		constexpr void negate() noexcept;
 		constexpr void fill(T value) noexcept;
@@ -428,6 +432,22 @@ namespace sigma::math
 	constexpr T Vector<T, D>::find_max_element() const noexcept
 	{
 		return *std::max_element(m_data.cbegin(), m_data.cend());
+	}
+
+	template <typename T, std::size_t D>
+	constexpr T Vector<T, D>::dot(const Vector& other) const noexcept
+	{
+		return std::inner_product(m_data.cbegin(), m_data.cend(), other.m_data.cbegin(), T{}, std::plus<T>(), std::multiplies<T>());
+	}
+
+	template <typename T, std::size_t D>
+	template <std::size_t N, std::enable_if_t<N == 3>*>
+	constexpr Vector<T, N> Vector<T, D>::cross(const Vector<T, N>& other) const noexcept
+	{
+		const auto x = m_data[1] * other[2] - m_data[2] * other[1];
+		const auto y = m_data[2] * other[0] - m_data[0] * other[2];
+		const auto z = m_data[0] * other[1] - m_data[1] * other[0];
+		return { x, y, z };
 	}
 
 

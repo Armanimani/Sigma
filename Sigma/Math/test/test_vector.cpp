@@ -617,3 +617,28 @@ TEST(Vector, FindMaxElement)
 
 	EXPECT_EQ(vec.find_max_element(), 10);
 }
+
+TEST(Vector, Dot)
+{
+	constexpr Vector<float, 3> vec{ 0.0f, 2.0f, 3.0f };
+	constexpr Vector<float, 3> other{ 1.0f, -2.0f, 3.0f };
+
+	constexpr auto expected_value = 0.0f * 1.0f + 2.0f * -2.0f + 3.0f * 3.0f;
+	EXPECT_FLOAT_EQ(vec.dot(other), expected_value);
+}
+
+TEST(Vector, Cross)
+{
+	constexpr Vector<float, 3> vec{ 0.0f, 2.0f, 3.0f };
+	constexpr Vector<float, 3> other{ 1.0f, -2.0f, 3.0f };
+
+	constexpr auto expected_x = vec.y() * other.z() - vec.z() * other.y();
+	constexpr auto expected_y = vec.z() * other.x() - vec.x() * other.z();
+	constexpr auto expected_z = vec.x() * other.y() - vec.y() * other.x();
+
+	constexpr auto result = vec.cross(other);
+	
+	EXPECT_FLOAT_EQ(result[0], expected_x);
+	EXPECT_FLOAT_EQ(result[1], expected_y);
+	EXPECT_FLOAT_EQ(result[2], expected_z);
+}
