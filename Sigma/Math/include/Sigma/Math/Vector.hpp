@@ -25,7 +25,8 @@ namespace sigma::math
 		constexpr Vector(T x, T y, T z);
 		constexpr Vector(T x, T y, T z, T w);
 
-		template<typename U, std::size_t N>
+		template <typename U, std::size_t N,
+			std::enable_if_t< (D <= N) >* = nullptr>
 		operator Vector<U, N>() const;
 		
 		[[nodiscard]] constexpr T& operator[](std::size_t index) noexcept;
@@ -68,11 +69,14 @@ namespace sigma::math
 		[[nodiscard]] constexpr auto get_distance(const Vector& other) const noexcept;
 		[[nodiscard]] constexpr T get_squared_distance(const Vector& other) const noexcept;
 		
-		[[nodiscard]] constexpr bool is_normalized() const noexcept;
+		[[nodiscard]] constexpr std::pair<T, T> find_min_max_element() const noexcept;
+		[[nodiscard]] constexpr T find_min_element() const noexcept;
+		[[nodiscard]] constexpr T find_max_element() const noexcept;
 		
 		constexpr void negate() noexcept;
 		constexpr void fill(T value) noexcept;
 		constexpr void normalize() noexcept;
+		[[nodiscard]] constexpr bool is_normalized() const noexcept;
 
 		[[nodiscard]] constexpr T& x() noexcept;
 		[[nodiscard]] constexpr T& y() noexcept;
@@ -103,10 +107,9 @@ namespace sigma::math
 	};
 
 	template <typename T, std::size_t D>
-	template <typename U, std::size_t N>
+	template <typename U, std::size_t N, std::enable_if_t< (D <= N) >*>
 	Vector<T, D>::operator Vector<U, N>() const
 	{
-		static_assert(D <= N);
 		std::array<U, N> buffer{};
 		std::copy(m_data.cbegin(), m_data.cend(), buffer.begin());
 		return Vector<U, N>(buffer);
@@ -406,6 +409,25 @@ namespace sigma::math
 				return (element - other_element) * (element - other_element);
 			}
 		);
+	}
+
+	template <typename T, std::size_t D>
+	constexpr std::pair<T, T> Vector<T, D>::find_min_max_element() const noexcept
+	{
+		auto [min_iterator, max_iterator] = std::minmax_element(m_data.cbegin(), m_data.cend());
+		return std::make_pair(*min_iterator, *max_iterator);
+	}
+
+	template <typename T, std::size_t D>
+	constexpr T Vector<T, D>::find_min_element() const noexcept
+	{
+		return *std::min_element(m_data.cbegin(), m_data.cend());
+	}
+
+	template <typename T, std::size_t D>
+	constexpr T Vector<T, D>::find_max_element() const noexcept
+	{
+		return *std::max_element(m_data.cbegin(), m_data.cend());
 	}
 
 

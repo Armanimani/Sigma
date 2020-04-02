@@ -593,3 +593,27 @@ TEST(Vector, GetSquaredDistance)
 	EXPECT_FLOAT_EQ(vec.get_squared_distance(other), expected_squared_length);
 	EXPECT_FLOAT_EQ(other.get_squared_distance(vec), expected_squared_length);
 }
+
+TEST(Vector, FindMinMaxElement)
+{
+	constexpr Vector<int, 4> vec{ 10, -2, 3, -20 };
+
+	auto [min_value, max_value] = vec.find_min_max_element();
+
+	EXPECT_EQ(min_value, -20);
+	EXPECT_EQ(max_value, 10);
+}
+
+TEST(Vector, FindMinElement)
+{
+	constexpr Vector<int, 4> vec{ 10, -2, 3, -20 };
+
+	EXPECT_EQ(vec.find_min_element(), -20);
+}
+
+TEST(Vector, FindMaxElement)
+{
+	constexpr Vector<int, 4> vec{ 10, -2, 3, -20 };
+
+	EXPECT_EQ(vec.find_max_element(), 10);
+}
