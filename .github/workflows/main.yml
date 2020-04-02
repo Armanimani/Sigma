@@ -16,6 +16,8 @@ jobs:
         
     steps: 
       - uses: actions/checkout@v2.1.0
+        with:
+          submodules: 'recursive' 
       
       - name: Configure
         run: |
