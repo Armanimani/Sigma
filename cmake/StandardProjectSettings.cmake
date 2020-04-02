@@ -11,7 +11,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 	# Set the possible values of build type for cmake-gui
 	set_property(
 		CACHE CMAKE_BUILD_TYPE PROPERTY
-		STRING "Debug" "Release"
+		STRINGS "Debug" "Release"
 	)
 endif()
 
