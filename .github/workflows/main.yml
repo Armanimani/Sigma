@@ -27,7 +27,7 @@ jobs:
           cmake ..
     
       - name: Build
-        run: cmake --build build --config Debug -DENABLE_IPO:BOOL=True -DENABLE_TESTING:BOOL=True
+        run: cmake -DENABLE_IPO:BOOL=True -DENABLE_TESTING:BOOL=True --build build --config Debug
       
       - name: Test
         run: cd build && ctest
