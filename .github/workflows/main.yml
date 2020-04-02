@@ -15,10 +15,12 @@ jobs:
         configuration: [Debug, Release]
         
     steps: 
-      - uses: actions/checkout@v2.1.0
-        with:
-          submodules: recursive
-      
+      - name: Checkout repository
+        uses: actions/checkout@v2.1.0
+        
+      - name: Checkout submodules
+        uses: textbook/git-checkout-submodule-action@2.1.1
+
       - name: Configure
         run: |
           mkdir build
