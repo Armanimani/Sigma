@@ -332,3 +332,49 @@ TEST(Matrix, OperatorMinusEqual_Scaler)
 	EXPECT_EQ(mat.at(1, 0), original(1, 0) - 2);
 	EXPECT_EQ(mat.at(1, 1), original(1, 1) - 2);
 }
+
+TEST(Matrix, OperatorNegate)
+{
+	const auto mat = get_default_2x2();
+	const auto result = - mat;
+
+	EXPECT_EQ(result.at(0, 0), -mat(0, 0));
+	EXPECT_EQ(result.at(0, 1), -mat(0, 1));
+	EXPECT_EQ(result.at(1, 0), -mat(1, 0));
+	EXPECT_EQ(result.at(1, 1), -mat(1, 1));
+}
+
+TEST(Matrix, Negate)
+{
+	auto mat = get_default_2x2();
+	const auto original{ mat };
+	mat.negate();
+
+	EXPECT_EQ(mat.at(0, 0), - original(0, 0));
+	EXPECT_EQ(mat.at(0, 1), - original(0, 1));
+	EXPECT_EQ(mat.at(1, 0), - original(1, 0));
+	EXPECT_EQ(mat.at(1, 1), - original(1, 1));
+}
+
+TEST(Matrix, Fill)
+{
+	Matrix<int, 2, 2> mat{ 2 };
+	mat.fill(10);
+
+	EXPECT_EQ(mat.at(0, 0), 10);
+	EXPECT_EQ(mat.at(0, 1), 10);
+	EXPECT_EQ(mat.at(1, 0), 10);
+	EXPECT_EQ(mat.at(1, 1), 10);
+}
+
+TEST(Matrix, SetDiagonal)
+{
+	Matrix<int, 2, 2> mat{};
+	mat.fill(2);
+	mat.set_diagonal(10);
+
+	EXPECT_EQ(mat.at(0, 0), 10);
+	EXPECT_EQ(mat.at(0, 1), 2);
+	EXPECT_EQ(mat.at(1, 0), 2);
+	EXPECT_EQ(mat.at(1, 1), 10);
+}

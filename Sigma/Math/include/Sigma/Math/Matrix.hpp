@@ -7,7 +7,7 @@ namespace sigma::math
 	template <typename T, std::size_t M, std::size_t N>
 	class Matrix
 	{
-		static_assert(M >= 2 && N >= 2);
+		static_assert(M >= 1 && N >= 1);
 	public:
 		using value_type = T;
 		constexpr static std::size_t k_row_count = M;
@@ -44,6 +44,13 @@ namespace sigma::math
 		constexpr void operator+=(T other) noexcept;
 		constexpr void operator-=(T other) noexcept;
 
+		[[nodiscard]] constexpr Matrix operator-() const;
+
+		constexpr void negate() noexcept;
+		constexpr void fill(T value) noexcept;
+		
+		constexpr void set_diagonal(T value) noexcept;
+
 		[[nodiscard]] constexpr T& at(std::size_t row_index, std::size_t column_index) noexcept;
 		[[nodiscard]] constexpr const T& at(std::size_t row_index, std::size_t column_index) const noexcept;
 	private:
@@ -52,6 +59,7 @@ namespace sigma::math
 		[[nodiscard]] constexpr static std::size_t get_data_index(std::size_t row_index, std::size_t column_index) noexcept;
 	};
 
+	
 	template <typename T, std::size_t M, std::size_t N>
 	constexpr Matrix<T, M, N>::Matrix(const T diagonal_value)
 	{
@@ -65,7 +73,7 @@ namespace sigma::math
 	template <typename T, std::size_t M, std::size_t N>
 	constexpr Matrix<T, M, N>::Matrix(const std::array<T, M* N>& data)
 		: m_data{ data } {}
-
+	
 	template <typename T, std::size_t M, std::size_t N>
 	template <typename T1, std::size_t P, std::enable_if_t<std::is_same_v<T1, T>>*>
 	constexpr auto Matrix<T, M, N>::operator*(const Matrix<T1, N, P>& other) const
@@ -203,6 +211,39 @@ namespace sigma::math
 				return value - other;
 			}
 		);
+	}
+
+	template <typename T, std::size_t M, std::size_t N>
+	constexpr Matrix<T, M, N> Matrix<T, M, N>::operator-() const
+	{
+		return (*this) * -1;
+	}
+
+	template <typename T, std::size_t M, std::size_t N>
+	constexpr void Matrix<T, M, N>::negate() noexcept
+	{
+		std::for_each(m_data.begin(), m_data.end(),
+			[](T& element)
+			{
+				element = -1 * element;
+			}
+		);
+	}
+
+	template <typename T, std::size_t M, std::size_t N>
+	constexpr void Matrix<T, M, N>::fill(const T value) noexcept
+	{
+		std::fill(m_data.begin(), m_data.end(), value);
+	}
+
+	template <typename T, std::size_t M, std::size_t N>
+	constexpr void Matrix<T, M, N>::set_diagonal(const T value) noexcept
+	{
+		static_assert(M == N);
+		for (std::size_t i = 0; i != M; ++i)
+		{
+			at(i, i) = value;
+		}
 	}
 
 	template <typename T, std::size_t M, std::size_t N>
