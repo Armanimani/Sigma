@@ -41,6 +41,17 @@ constexpr auto get_default_2x2()
 	return mat;
 }
 
+constexpr auto get_default_2x2_float()
+{
+	Matrix<float, 2, 2> mat{};
+	mat(0, 0) = 11.0f;
+	mat(0, 1) = 12.0f;
+	mat(1, 0) = 13.0f;
+	mat(1, 1) = 14.0f;
+
+	return mat;
+}
+
 constexpr auto get_alternative_2x2()
 {
 	Matrix<int, 2, 2> mat{};
@@ -239,4 +250,85 @@ TEST(Matrix, OperatorMinusEqual)
 
 	EXPECT_EQ(mat.k_row_count, 2);
 	EXPECT_EQ(mat.k_column_count, 2);
+}
+
+TEST(Matrix, OperatorMultiply_Scaler)
+{
+	const auto lhs = get_default_2x2();
+	auto result = lhs * 2;
+
+	EXPECT_EQ(result.at(0, 0), lhs(0, 0) * 2);
+	EXPECT_EQ(result.at(0, 1), lhs(0, 1) * 2);
+	EXPECT_EQ(result.at(1, 0), lhs(1, 0) * 2);
+	EXPECT_EQ(result.at(1, 1), lhs(1, 1) * 2);
+}
+
+TEST(Matrix, OperatorPlus_Scaler)
+{
+	const auto lhs = get_default_2x2();
+	auto result = lhs + 2;
+
+	EXPECT_EQ(result.at(0, 0), lhs(0, 0) + 2);
+	EXPECT_EQ(result.at(0, 1), lhs(0, 1) + 2);
+	EXPECT_EQ(result.at(1, 0), lhs(1, 0) + 2);
+	EXPECT_EQ(result.at(1, 1), lhs(1, 1) + 2);
+}
+
+TEST(Matrix, OperatorMinus_Scaler)
+{
+	const auto lhs = get_default_2x2();
+	auto result = lhs - 2;
+
+	EXPECT_EQ(result.at(0, 0), lhs(0, 0) - 2);
+	EXPECT_EQ(result.at(0, 1), lhs(0, 1) - 2);
+	EXPECT_EQ(result.at(1, 0), lhs(1, 0) - 2);
+	EXPECT_EQ(result.at(1, 1), lhs(1, 1) - 2);
+}
+
+TEST(Matrix, OperatorMultiplyEqual_Scaler)
+{
+	auto mat = get_default_2x2();
+	const auto original{ mat };
+	mat *= 2;
+
+	EXPECT_EQ(mat.at(0, 0), original(0, 0) * 2);
+	EXPECT_EQ(mat.at(0, 1), original(0, 1) * 2);
+	EXPECT_EQ(mat.at(1, 0), original(1, 0) * 2);
+	EXPECT_EQ(mat.at(1, 1), original(1, 1) * 2);
+}
+
+TEST(Matrix, OperatorDivideEqual_Scaler)
+{
+	auto mat = get_default_2x2_float();
+	const auto original{ mat };
+	mat /= 2;
+
+	EXPECT_FLOAT_EQ(mat.at(0, 0), original(0, 0) / 2);
+	EXPECT_FLOAT_EQ(mat.at(0, 1), original(0, 1) / 2);
+	EXPECT_FLOAT_EQ(mat.at(1, 0), original(1, 0) / 2);
+	EXPECT_FLOAT_EQ(mat.at(1, 1), original(1, 1) / 2);
+}
+
+TEST(Matrix, OperatorPlusEqual_Scaler)
+{
+	auto mat = get_default_2x2();
+	const auto original{ mat };
+	mat += 2;
+
+	EXPECT_EQ(mat.at(0, 0), original(0, 0) + 2);
+	EXPECT_EQ(mat.at(0, 1), original(0, 1) + 2);
+	EXPECT_EQ(mat.at(1, 0), original(1, 0) + 2);
+	EXPECT_EQ(mat.at(1, 1), original(1, 1) + 2);
+}
+
+TEST(Matrix, OperatorMinusEqual_Scaler)
+{
+	auto mat = get_default_2x2();
+	const auto original{ mat };
+	mat -= 2;
+
+	EXPECT_EQ(mat.at(0, 0), original(0, 0) - 2);
+	EXPECT_EQ(mat.at(0, 1), original(0, 1) - 2);
+	EXPECT_EQ(mat.at(1, 0), original(1, 0) - 2);
+	EXPECT_EQ(mat.at(1, 1), original(1, 1) - 2);
 }

@@ -24,16 +24,25 @@ namespace sigma::math
 		[[nodiscard]] constexpr const T& operator()(std::size_t row_index, std::size_t column_index) const noexcept;
 
 		template <typename T1, std::size_t P, std::enable_if_t<std::is_same_v<T1, T>>* = nullptr>
-		[[nodiscard]] auto operator*(const Matrix<T1, N, P>& other) const;
+		[[nodiscard]] constexpr auto operator*(const Matrix<T1, N, P>& other) const;
 		
-		[[nodiscard]] Matrix operator+(const Matrix& other) const;
-		[[nodiscard]] Matrix operator-(const Matrix& other) const;
+		[[nodiscard]] constexpr Matrix operator+(const Matrix& other) const;
+		[[nodiscard]] constexpr Matrix operator-(const Matrix& other) const;
+
+		[[nodiscard]] constexpr Matrix operator*(T other) const;
+		[[nodiscard]] constexpr Matrix operator+(T other) const;
+		[[nodiscard]] constexpr Matrix operator-(T other) const;
 
 		template <typename T1, std::size_t P, std::size_t Q, std::enable_if_t<P == Q && P == M && Q == N>* = nullptr>
-		void operator*=(const Matrix<T1, P, Q>& other) noexcept;
+		constexpr void operator*=(const Matrix<T1, P, Q>& other) noexcept;
 
-		void operator+=(const Matrix& other) noexcept;
-		void operator-=(const Matrix& other) noexcept;
+		constexpr void operator+=(const Matrix& other) noexcept;
+		constexpr void operator-=(const Matrix& other) noexcept;
+
+		constexpr void operator*=(T other) noexcept;
+		constexpr void operator/=(T other) noexcept;
+		constexpr void operator+=(T other) noexcept;
+		constexpr void operator-=(T other) noexcept;
 
 		[[nodiscard]] constexpr T& at(std::size_t row_index, std::size_t column_index) noexcept;
 		[[nodiscard]] constexpr const T& at(std::size_t row_index, std::size_t column_index) const noexcept;
@@ -59,7 +68,7 @@ namespace sigma::math
 
 	template <typename T, std::size_t M, std::size_t N>
 	template <typename T1, std::size_t P, std::enable_if_t<std::is_same_v<T1, T>>*>
-	auto Matrix<T, M, N>::operator*(const Matrix<T1, N, P>& other) const
+	constexpr auto Matrix<T, M, N>::operator*(const Matrix<T1, N, P>& other) const
 	{
 		Matrix<std::common_type_t<T, T>, M, P> result {};
 		for (std::size_t column_index = 0; column_index != P; ++column_index)
@@ -78,7 +87,7 @@ namespace sigma::math
 	}
 
 	template <typename T, std::size_t M, std::size_t N>
-	Matrix<T, M, N> Matrix<T, M, N>::operator+(const Matrix& other) const
+	constexpr Matrix<T, M, N> Matrix<T, M, N>::operator+(const Matrix& other) const
 	{
 		Matrix<T, M, N> result{};
 		std::transform(m_data.cbegin(), m_data.cend(), other.m_data.cbegin(), result.m_data.begin(), std::plus<T>());
@@ -86,7 +95,7 @@ namespace sigma::math
 	}
 
 	template <typename T, std::size_t M, std::size_t N>
-	Matrix<T, M, N> Matrix<T, M, N>::operator-(const Matrix& other) const
+	constexpr Matrix<T, M, N> Matrix<T, M, N>::operator-(const Matrix& other) const
 	{
 		Matrix<T, M, N> result{};
 		std::transform(m_data.cbegin(), m_data.cend(), other.m_data.cbegin(), result.m_data.begin(), std::minus<T>());
@@ -94,23 +103,106 @@ namespace sigma::math
 	}
 
 	template <typename T, std::size_t M, std::size_t N>
+	constexpr Matrix<T, M, N> Matrix<T, M, N>::operator*(const T other) const
+	{
+		Matrix<T, M, N> result{};
+		std::transform(m_data.cbegin(), m_data.cend(), result.m_data.begin(),
+			[=](const T value)
+			{
+				return value * other;
+			}
+		);
+		return result;
+	}
+
+	template <typename T, std::size_t M, std::size_t N>
+	constexpr Matrix<T, M, N> Matrix<T, M, N>::operator+(const T other) const
+	{
+		Matrix<T, M, N> result{};
+		std::transform(m_data.cbegin(), m_data.cend(), result.m_data.begin(),
+			[=](const T value)
+			{
+				return value + other;
+			}
+		);
+		return result;
+	}
+
+	template <typename T, std::size_t M, std::size_t N>
+	constexpr Matrix<T, M, N> Matrix<T, M, N>::operator-(const T other) const
+	{
+		Matrix<T, M, N> result{};
+		std::transform(m_data.cbegin(), m_data.cend(), result.m_data.begin(),
+			[=](const T value)
+			{
+				return value - other;
+			}
+		);
+		return result;
+	}
+
+	template <typename T, std::size_t M, std::size_t N>
 	template <typename T1, std::size_t P, std::size_t Q, std::enable_if_t<P == Q && P == M && Q == N>*>
-	void Matrix<T, M, N>::operator*=(const Matrix<T1, P, Q>& other) noexcept
+	constexpr void Matrix<T, M, N>::operator*=(const Matrix<T1, P, Q>& other) noexcept
 	{
 		const Matrix<T, M, N> mat{ m_data };
 		(*this) = mat * other;		
 	}
 
 	template <typename T, std::size_t M, std::size_t N>
-	void Matrix<T, M, N>::operator+=(const Matrix& other) noexcept
+	constexpr void Matrix<T, M, N>::operator+=(const Matrix& other) noexcept
 	{
 		(*this) = (*this) + other;
 	}
 
 	template <typename T, std::size_t M, std::size_t N>
-	void Matrix<T, M, N>::operator-=(const Matrix& other) noexcept
+	constexpr void Matrix<T, M, N>::operator-=(const Matrix& other) noexcept
 	{
 		(*this) = (*this) - other;
+	}
+
+	template <typename T, std::size_t M, std::size_t N>
+	constexpr void Matrix<T, M, N>::operator*=(const T other) noexcept
+	{
+		std::transform(m_data.cbegin(), m_data.cend(), m_data.begin(),
+			[=](const T value)
+			{
+				return value * other;
+			}
+		);
+	}
+
+	template <typename T, std::size_t M, std::size_t N>
+	constexpr void Matrix<T, M, N>::operator/=(const T other) noexcept
+	{
+		std::transform(m_data.cbegin(), m_data.cend(), m_data.begin(),
+			[=](const T value)
+			{
+				return value / other;
+			}
+		);
+	}
+
+	template <typename T, std::size_t M, std::size_t N>
+	constexpr void Matrix<T, M, N>::operator+=(const T other) noexcept
+	{
+		std::transform(m_data.cbegin(), m_data.cend(), m_data.begin(),
+			[=](const T value)
+			{
+				return value + other;
+			}
+		);
+	}
+
+	template <typename T, std::size_t M, std::size_t N>
+	constexpr void Matrix<T, M, N>::operator-=(const T other) noexcept
+	{
+		std::transform(m_data.cbegin(), m_data.cend(), m_data.begin(),
+			[=](const T value)
+			{
+				return value - other;
+			}
+		);
 	}
 
 	template <typename T, std::size_t M, std::size_t N>
