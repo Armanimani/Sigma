@@ -12,5 +12,3 @@ target_link_libraries(
 	sigma_engine
 	INTERFACE project_warnings project_options DirectX_math
 )
-
-add_subdirectory(test)
