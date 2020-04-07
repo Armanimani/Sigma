@@ -3,12 +3,16 @@
 #include <QtCore>
 #include <QtWidgets>
 
+#include "ui_Editor.h"
+
 namespace sigma::editor
 {
 	class Editor final : public QMainWindow
 	{
 		Q_OBJECT
 	public:
-		Editor(QWidget* parent = nullptr);
+		explicit Editor(QWidget* parent = nullptr);
+	private:
+		Ui::MainWindow m_ui{};
 	};
 }

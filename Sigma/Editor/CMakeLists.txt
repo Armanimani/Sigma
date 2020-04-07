@@ -10,8 +10,10 @@ set(CMAKE_AUTOUIC ON)
 
 add_executable(
 	sigma_editor
+	"src/resources.qrc"
 	"src/main.cpp"
-	"src/Editor/Editor.cpp")
+	"src/Editor/Editor.cpp"
+)
 
 
 target_link_libraries(

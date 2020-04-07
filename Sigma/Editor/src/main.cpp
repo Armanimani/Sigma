@@ -1,11 +1,14 @@
 #include <QApplication>
-#include <QWidget>
+
+#include "Editor/Editor.hpp"
 
 int main(int argc, char** argv)
 {
 	QApplication application(argc, argv);
-	QWidget main_window;
+	
+	sigma::editor::Editor main_window{};
 	main_window.show();
-
-	return application.exec();
+	
+	const auto return_code = application.exec();
+	return return_code;
 }
