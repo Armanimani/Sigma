@@ -2,4 +2,23 @@
     <qresource prefix="/StyleSheets">
         <file alias="Dark.qss">..\..\..\resources\StyleSheets\Dark.qss</file>
     </qresource>
+    <qresource prefix="/Controls">
+        <file alias="arrow-point-to-down-blue.png">..\..\..\resources\Controls\arrow-point-to-down-blue.png</file>
+        <file alias="arrow-point-to-down-white.png">..\..\..\resources\Controls\arrow-point-to-down-white.png</file>
+        <file alias="arrow-point-to-right-blue.png">..\..\..\resources\Controls\arrow-point-to-right-blue.png</file>
+        <file alias="arrow-point-to-right-white.png">..\..\..\resources\Controls\arrow-point-to-right-white.png</file>
+        <file alias="arrow-point-to-up-blue.png">..\..\..\resources\Controls\arrow-point-to-up-blue.png</file>
+        <file alias="arrow-point-to-up-white.png">..\..\..\resources\Controls\arrow-point-to-up-white.png</file>
+        <file alias="stylesheet-branch-closed.png">..\..\..\resources\Controls\stylesheet-branch-closed.png</file>
+        <file alias="stylesheet-branch-end.png">..\..\..\resources\Controls\stylesheet-branch-end.png</file>
+        <file alias="stylesheet-branch-more.png">..\..\..\resources\Controls\stylesheet-branch-more.png</file>
+        <file alias="stylesheet-branch-open.png">..\..\..\resources\Controls\stylesheet-branch-open.png</file>
+        <file alias="stylesheet-vline.png">..\..\..\resources\Controls\stylesheet-vline.png</file>
+    </qresource>
+    <qresource prefix="/Icons">
+        <file alias="window_close_32.png">..\..\..\resources\Icons\window_close_32.png</file>
+        <file alias="window_maximize_32.png">..\..\..\resources\Icons\window_maximize_32.png</file>
+        <file alias="window_minimize_32.png">..\..\..\resources\Icons\window_minimize_32.png</file>
+        <file alias="window_restore_32.png">..\..\..\resources\Icons\window_restore_32.png</file>
+    </qresource>
 </RCC>

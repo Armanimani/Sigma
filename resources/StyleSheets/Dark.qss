@@ -1,3 +1,8 @@
+QWidget
+{
+	color: #f0f0f0;
+}
+
 QMainWindow 
 {
 	background-color: #1e1e1e;
@@ -186,28 +191,28 @@ QTreeView::branch:has-children:!has-siblings:closed,
 QTreeView::branch:closed:has-children:has-siblings 
 {
 	border-image: none;
-	image: url(":/Editor/Resources/controls/arrow-point-to-right-white.png");
+	image: url(":/Controls/arrow-point-to-right-white.png");
 }
 
 QTreeView::branch:has-children:!has-siblings:closed:hover,
 QTreeView::branch:closed:has-children:has-siblings:hover 
 {
 	border-image: none;
-	image: url(":/Editor/Resources/controls/arrow-point-to-right-blue.png");
+	image: url(":/Controls/arrow-point-to-right-blue.png");
 }
 
 QTreeView::branch:open:has-children:!has-siblings,
 QTreeView::branch:open:has-children:has-siblings
 {
 	border-image: none;
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-white.png");
+	image: url(":/Controls/arrow-point-to-down-white.png");
 }
 
 QTreeView::branch:open:has-children:!has-siblings:hover,
 QTreeView::branch:open:has-children:has-siblings:hover
 {
 	border-image: none;
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-blue.png");
+	image: url(":/Controls/arrow-point-to-down-blue.png");
 }
 
 
@@ -332,7 +337,7 @@ QComboBox::drop-down
 QComboBox::down-arrow 
 {
 	border-style: None;
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-white.png");
+	image: url(":/Controls/arrow-point-to-down-white.png");
 	border-style: None;
 	outline: None;
 	width: 14px;
@@ -341,7 +346,7 @@ QComboBox::down-arrow
 
 QComboBox::down-arrow:on 
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-blue.png");
+	image: url(":/Controls/arrow-point-to-down-blue.png");
 	border-style: None;
 	outline: None;
 }
@@ -472,14 +477,14 @@ QSpinBox::down-button
 
 QSpinBox::down-arrow
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-white.png");
+	image: url(":/Controls/arrow-point-to-down-white.png");
 	width: 14px;
 	height: 14px;
 }
 
 QSpinBox::down-arrow:pressed
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-blue.png");
+	image: url(":/Controls/arrow-point-to-down-blue.png");
 	width: 14px;
 	height: 14px;
 }
@@ -492,14 +497,14 @@ QSpinBox::up-button
 
 QSpinBox::up-arrow
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-up-white.png");
+	image: url(":/Controls/arrow-point-to-up-white.png");
 	width: 14px;
 	height: 14px;
 }
 
 QSpinBox::up-arrow:pressed
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-up-blue.png");
+	image: url(":/Controls/arrow-point-to-up-blue.png");
 	width: 14px;
 	height: 14px;
 }
@@ -523,14 +528,14 @@ QDoubleSpinBox::down-button
 
 QDoubleSpinBox::down-arrow
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-white.png");
+	image: url(":/Controls/arrow-point-to-down-white.png");
 	width: 14px;
 	height: 14px;
 }
 
 QDoubleSpinBox::down-arrow:pressed
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-blue.png");
+	image: url(":/Controls/arrow-point-to-down-blue.png");
 	width: 14px;
 	height: 14px;
 }
@@ -543,14 +548,14 @@ QDoubleSpinBox::up-button
 
 QDoubleSpinBox::up-arrow
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-up-white.png");
+	image: url(":/Controls/arrow-point-to-up-white.png");
 	width: 14px;
 	height: 14px;
 }
 
 QDoubleSpinBox::up-arrow:pressed
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-up-blue.png");
+	image: url(":/Controls/arrow-point-to-up-blue.png");
 	width: 14px;
 	height: 14px;
 }
@@ -574,14 +579,14 @@ QTimeEdit::down-button
 
 QTimeEdit::down-arrow
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-white.png");
+	image: url(":/Controls/arrow-point-to-down-white.png");
 	width: 14px;
 	height: 14px;
 }
 
 QTimeEdit::down-arrow:pressed
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-blue.png");
+	image: url(":/Controls/arrow-point-to-down-blue.png");
 	width: 14px;
 	height: 14px;
 }
@@ -594,14 +599,14 @@ QTimeEdit::up-button
 
 QTimeEdit::up-arrow
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-up-white.png");
+	image: url(":/Controls/arrow-point-to-up-white.png");
 	width: 14px;
 	height: 14px;
 }
 
 QTimeEdit::up-arrow:pressed
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-up-blue.png");
+	image: url(":/Controls/arrow-point-to-up-blue.png");
 	width: 14px;
 	height: 14px;
 }
@@ -625,14 +630,14 @@ QDateEdit::down-button
 
 QDateEdit::down-arrow
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-white.png");
+	image: url(":/Controls/arrow-point-to-down-white.png");
 	width: 14px;
 	height: 14px;
 }
 
 QDateEdit::down-arrow:pressed
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-blue.png");
+	image: url(":/Controls/arrow-point-to-down-blue.png");
 	width: 14px;
 	height: 14px;
 }
@@ -645,14 +650,14 @@ QDateEdit::up-button
 
 QDateEdit::up-arrow
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-up-white.png");
+	image: url(":/Controls/arrow-point-to-up-white.png");
 	width: 14px;
 	height: 14px;
 }
 
 QDateEdit::up-arrow:pressed
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-up-blue.png");
+	image: url(":/Controls/arrow-point-to-up-blue.png");
 	width: 14px;
 	height: 14px;
 }
@@ -676,14 +681,14 @@ QDateTimeEdit::down-button
 
 QDateTimeEdit::down-arrow
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-white.png");
+	image: url(":/Controls/arrow-point-to-down-white.png");
 	width: 14px;
 	height: 14px;
 }
 
 QDateTimeEdit::down-arrow:pressed
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-down-blue.png");
+	image: url(":/Controls/arrow-point-to-down-blue.png");
 	width: 14px;
 	height: 14px;
 }
@@ -696,14 +701,14 @@ QDateTimeEdit::up-button
 
 QDateTimeEdit::up-arrow
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-up-white.png");
+	image: url(":/Controls/arrow-point-to-up-white.png");
 	width: 14px;
 	height: 14px;
 }
 
 QDateTimeEdit::up-arrow:pressed
 {
-	image: url(":/Editor/Resources/controls/arrow-point-to-up-blue.png");
+	image: url(":/Controls/arrow-point-to-up-blue.png");
 	width: 14px;
 	height: 14px;
 }
@@ -735,25 +740,41 @@ QProgressBar:chunk
 	background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 0.5, stop: 0 #1e90ff, stop: 1 #4ba6fe);
 }
 
-
-QDockWidget 
+QDockWidget > QWidget
 {
 	background-color: #1e1e1e;
 	border-style: solid;
 	border-width: 1px;
 	border-color: #323232;
 	color: #f0f0f0;
-	titlebar-close-icon: url(":/Editor/Resources/icons/window_close_32.png");
-	titlebar-normal-icon: url(":/Editor/Resources/icons/window_maximize_32.png");
+	titlebar-close-icon: url(":/Icons/window_close_32.png");
+	titlebar-normal-icon: url(":/Icons/window_maximize_32.png");
 }
+
+QDockWidget::close-button, QDockWidget::float-button {
+    border: none;
+    background: transparent;
+    icon-size: 30px;
+    padding: 1px;
+}
+
+
+QDockWidget::float-button {
+    image: url(":/Icons/window_maximize_32.png");
+}
+
+QDockWidget::close-button {
+    image: url(":/Icons/window_close_32.png");
+}
+
 
 QDockWidget::title 
 {
 	border-style: solid;
 	border-width: 1px;
-	border-color: #323232;
+	border-color: #404040;
 	text-align: left;
-	background-color: #1e1e1e;
+	background-color: #323232;
 	width: 32px;
 }
 

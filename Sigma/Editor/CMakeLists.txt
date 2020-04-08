@@ -13,6 +13,7 @@ add_executable(
 	"src/resources.qrc"
 	"src/main.cpp"
 	"src/Editor/Editor.cpp"
+	"src/Editor/Widgets/EngineWidget.cpp"
 )
 
 

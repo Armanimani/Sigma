@@ -13,6 +13,6 @@ namespace sigma::editor
 	public:
 		explicit Editor(QWidget* parent = nullptr);
 	private:
-		Ui::MainWindow m_ui{};
+		Ui::EditorWindow m_ui{};
 	};
 }
