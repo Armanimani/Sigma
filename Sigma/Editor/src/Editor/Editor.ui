@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Editor</string>
+   <string>Sigma-Editor</string>
   </property>
   <property name="animated">
    <bool>false</bool>
