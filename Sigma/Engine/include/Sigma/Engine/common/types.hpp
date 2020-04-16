@@ -15,6 +15,7 @@ namespace sigma
 	using UInt64 = unsigned __int64;
 
 	using Float = float;
+	using Double = double;
 
 	using Bool = bool;
 
