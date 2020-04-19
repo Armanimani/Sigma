@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-#include "../common/types.hpp"
+#include "../Common/types.hpp"
 
 namespace sigma
 {
