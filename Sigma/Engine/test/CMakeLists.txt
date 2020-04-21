@@ -1,6 +1,8 @@
 add_executable(
 	test_engine
 	DataStructures/test_SparseSet.cpp
+	Utilities/test_vector_utils.cpp
+	DataStructures/Iterators/test_random_access_iterator.cpp
 )
 
 target_link_libraries(
