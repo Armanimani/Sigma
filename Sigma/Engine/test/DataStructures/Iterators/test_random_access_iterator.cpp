@@ -238,3 +238,227 @@ TEST(RandomAccessIterator, operator_dereference)
 	*iterator = 99;
 	ASSERT_EQ(*iterator, 99);
 }
+
+
+/* ConstRandomAccessIterator */
+TEST(ConstRandomAccessIterator, construction_default)
+{
+	ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t> iterator{};
+	ASSERT_TRUE(&iterator);
+}
+
+TEST(ConstRandomAccessIterator, construction_container)
+{
+	const auto container = get_mocked_container();
+	auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container);
+	ASSERT_TRUE(&iterator);
+}
+
+TEST(ConstRandomAccessIterator, construction_container_offset)
+{
+	const auto container = get_mocked_container();
+	auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 10);
+	ASSERT_TRUE(&iterator);
+}
+
+TEST(ConstRandomAccessIterator, operator_plusEqual)
+{
+	const auto container = get_mocked_container();
+	auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container);
+	ASSERT_EQ(*iterator, 10);
+
+	iterator += 2;
+	ASSERT_EQ(*iterator, 12);
+}
+
+TEST(ConstRandomAccessIterator, operator_minusEqual)
+{
+	const auto container = get_mocked_container();
+	auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+	ASSERT_EQ(*iterator, 13);
+
+	iterator -= 2;
+	ASSERT_EQ(*iterator, 11);
+}
+
+TEST(ConstRandomAccessIterator, operator_plus_value)
+{
+	const auto container = get_mocked_container();
+	const auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container);
+	ASSERT_EQ(*iterator, 10);
+
+	const auto new_iterator = iterator + 2;
+	ASSERT_EQ(*iterator, 10);
+	ASSERT_EQ(*new_iterator, 12);
+}
+
+TEST(ConstRandomAccessIterator, operator_minus_value)
+{
+	const auto container = get_mocked_container();
+	const auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+	ASSERT_EQ(*iterator, 13);
+
+	const auto new_iterator = iterator - 2;
+	ASSERT_EQ(*iterator, 13);
+	ASSERT_EQ(*new_iterator, 11);
+}
+
+TEST(ConstRandomAccessIterator, operator_preIncrement)
+{
+	const auto container = get_mocked_container();
+	auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container);
+	ASSERT_EQ(*iterator, 10);
+
+	++iterator;
+	ASSERT_EQ(*iterator, 11);
+}
+
+TEST(ConstRandomAccessIterator, operator_preDecrement)
+{
+	const auto container = get_mocked_container();
+	auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+	ASSERT_EQ(*iterator, 13);
+
+	--iterator;
+	ASSERT_EQ(*iterator, 12);
+}
+
+TEST(ConstRandomAccessIterator, operator_postIncrement)
+{
+	const auto container = get_mocked_container();
+	auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container);
+	ASSERT_EQ(*iterator, 10);
+
+	const auto new_iterator = iterator++;
+	ASSERT_EQ(*iterator, 10);
+	ASSERT_EQ(*new_iterator, 11);
+}
+
+TEST(ConstRandomAccessIterator, operator_postDecrement)
+{
+	const auto container = get_mocked_container();
+	auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+	ASSERT_EQ(*iterator, 13);
+
+	const auto new_iterator = iterator--;
+	ASSERT_EQ(*iterator, 13);
+	ASSERT_EQ(*new_iterator, 12);
+}
+
+TEST(ConstRandomAccessIterator, operator_plus_iterator)
+{
+	const auto container = get_mocked_container();
+	const auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+	const auto other_iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 1);
+	ASSERT_EQ(*iterator, 13);
+	ASSERT_EQ(*other_iterator, 11);
+
+	ASSERT_EQ(iterator + other_iterator, 4);
+}
+
+TEST(ConstRandomAccessIterator, operator_minus_iterator)
+{
+	const auto container = get_mocked_container();
+	const auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+	const auto other_iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 1);
+	ASSERT_EQ(*iterator, 13);
+	ASSERT_EQ(*other_iterator, 11);
+
+	ASSERT_EQ(iterator - other_iterator, 2);
+}
+
+TEST(ConstRandomAccessIterator, operator_equality)
+{
+	const auto container = get_mocked_container();
+	const auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+	const auto other_iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+
+	ASSERT_TRUE(iterator == iterator);
+	ASSERT_TRUE(other_iterator == other_iterator);
+	ASSERT_TRUE(iterator == other_iterator);
+}
+
+TEST(ConstRandomAccessIterator, operator_inequality)
+{
+	const auto container = get_mocked_container();
+	const auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+	const auto other_iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 2);
+
+	ASSERT_TRUE(iterator == iterator);
+	ASSERT_TRUE(other_iterator == other_iterator);
+	ASSERT_TRUE(iterator != other_iterator);
+}
+
+TEST(ConstRandomAccessIterator, operator_lessThan)
+{
+	const auto container = get_mocked_container();
+	const auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+	const auto other_iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 2);
+	const auto clone_iterator = iterator;
+
+	ASSERT_FALSE(iterator < iterator);
+	ASSERT_TRUE(other_iterator < iterator);
+	ASSERT_FALSE(iterator < other_iterator);
+	ASSERT_FALSE(iterator < clone_iterator);
+}
+
+TEST(ConstRandomAccessIterator, operator_greaterThan)
+{
+	const auto container = get_mocked_container();
+	const auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+	const auto other_iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 2);
+	const auto clone_iterator = iterator;
+
+	ASSERT_FALSE(iterator > iterator);
+	ASSERT_FALSE(other_iterator > iterator);
+	ASSERT_TRUE(iterator > other_iterator);
+	ASSERT_FALSE(iterator > clone_iterator);
+}
+
+TEST(ConstRandomAccessIterator, operator_lessThanEqual)
+{
+	const auto container = get_mocked_container();
+	const auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+	const auto other_iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 2);
+	const auto clone_iterator = iterator;
+
+	ASSERT_TRUE(iterator <= iterator);
+	ASSERT_TRUE(other_iterator <= iterator);
+	ASSERT_FALSE(iterator <= other_iterator);
+	ASSERT_TRUE(iterator <= clone_iterator);
+}
+
+TEST(ConstRandomAccessIterator, operator_greaterThanEqual)
+{
+	const auto container = get_mocked_container();
+	const auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 3);
+	const auto other_iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 2);
+	const auto clone_iterator = iterator;
+
+	ASSERT_TRUE(iterator >= iterator);
+	ASSERT_FALSE(other_iterator >= iterator);
+	ASSERT_TRUE(iterator >= other_iterator);
+	ASSERT_TRUE(iterator >= clone_iterator);
+}
+
+TEST(ConstRandomAccessIterator, operator_arrow)
+{
+	struct Data
+	{
+		float value{};
+	};
+
+	std::array<Data, 2> container{};
+	container[0] = Data{ 10 };
+	container[1] = Data{ 20 };
+
+	const auto iterator = ConstRandomAccessIterator<std::array<Data, 2>, Data, std::size_t>(container, 1);
+	ASSERT_EQ(iterator->value, 20);
+}
+
+TEST(ConstRandomAccessIterator, operator_dereference)
+{
+	const auto container = get_mocked_container();
+	const auto iterator = ConstRandomAccessIterator<std::array<int, 4>, int, std::size_t>(container, 2);
+	ASSERT_EQ(*iterator, 12);
+}
