@@ -1,6 +1,11 @@
 #pragma once
 
+#include <cassert>
 #include <vector>
+#include <algorithm>
+
+#include "Sigma/Engine/Utilities/vector_utils.hpp"
+#include "Sigma/Engine/DataStructures/Iterators/random_access_iterator.hpp"
 
 namespace sigma
 {
@@ -8,98 +13,164 @@ namespace sigma
 	class SparseSet
 	{
 	public:
-		class Iterator
-		{
-			friend class SparseSet<T>;
-		};
-
 		using element_type = T;
 		using size_type = std::size_t;
-		using iterator_type = Iterator;
+		using iterator_type = RandomAccessIterator<std::vector<element_type>, element_type, size_type>;
+		using const_iterator_type = ConstRandomAccessIterator<std::vector<element_type>, element_type, size_type>;
 
 		SparseSet() = default;
-		explicit SparseSet(std::size_t capacity);
+		explicit SparseSet(size_type capacity);
 
 		template <typename... Args>
-		void construct(std::size_t index, Args&& ...args);
+		void emplace(size_type index, Args&& ...args);
 
-		void reserve(std::size_t capacity);
-		void sparse_reserve(std::size_t capacity);
+		void erase(size_type index) noexcept;
+
+		void reserve(size_type capacity);
 		
-		void shrink_to_fit();
+		[[nodiscard]] auto capacity() const noexcept;
+		[[nodiscard]] auto size() const noexcept;
 		
-		[[nodiscard]] std::size_t capacity() const noexcept;
-		[[nodiscard]] std::size_t sparse_capacity() const noexcept;
-		[[nodiscard]] std::size_t size() const noexcept;
-		[[nodiscard]] std::size_t sparse_size() const noexcept;
+		[[nodiscard]] bool is_empty() const noexcept;
+		[[nodiscard]] bool is_full() const noexcept;
+
+		[[nodiscard]] bool has_element(size_type index) const noexcept;
+
+		[[nodiscard]] const_iterator_type cbegin() const noexcept;
+		[[nodiscard]] const_iterator_type cend() const noexcept;
+		[[nodiscard]] iterator_type begin() noexcept;
+		[[nodiscard]] iterator_type end() noexcept;
+
+		[[nodiscard]] element_type* get_element_pointer(size_type index) noexcept;
+		[[nodiscard]] const element_type* get_element_pointer(size_type index) const noexcept;
 
 		void clear();
-	private:	
-		std::vector<element_type> m_dense;
-		std::vector <element_type*> m_sparse;
+	private:		
+		std::vector<element_type> m_dense{};
+		std::vector<element_type*> m_sparse{};
 	};
 
+
 	template <typename T>
-	SparseSet<T>::SparseSet(const std::size_t capacity)
+	SparseSet<T>::SparseSet(const size_type capacity)
 	{
 		reserve(capacity);
 	}
 
 	template <typename T>
-	template <typename ... Args>
-	void SparseSet<T>::construct(const std::size_t index, Args&&... args)
+	template <typename... Args>
+	void SparseSet<T>::emplace(const size_type index, Args&&... args)
 	{
-		// TODO: Ensure that nothing related to specified index is registered
-		m_dense.emplace_back(std::forward<Args...>(args)...);
+		assert(size() < capacity());
 
-		if (index >=m_sparse.size())
-		{
-			m_sparse.resize(index);
-		}
-
-		m_sparse.insert(m_sparse.begin() + index, &(m_dense.back()));
+		erase(index);
+		
+		m_dense.emplace_back(std::forward<Args>(args)...);	
+		safe_assignment(m_sparse, index, &m_dense.back());
 	}
 
 	template <typename T>
-	void SparseSet<T>::reserve(const std::size_t capacity)
+	void SparseSet<T>::erase(const size_type index) noexcept
 	{
+		if (!has_element(index))
+		{
+			return;
+		}
+
+		auto item_address = m_sparse[index];
+		auto back_address = &m_dense.back();
+		std::swap(*item_address, *back_address);
+
+		std::replace_if(m_sparse.begin(), m_sparse.end(),
+			[=](const element_type* address)
+			{
+				return address == item_address;
+			}, 
+			nullptr
+		);
+
+		std::replace_if(m_sparse.begin(), m_sparse.end(),
+			[=](const element_type* address)
+			{
+				return address == back_address;
+			}, 
+			item_address
+		);
+
+		m_dense.pop_back();
+	}
+
+	template <typename T>
+	void SparseSet<T>::reserve(const size_type capacity)
+	{
+		assert(is_empty());
 		m_dense.reserve(capacity);
 	}
 
 	template <typename T>
-	void SparseSet<T>::sparse_reserve(const std::size_t capacity)
-	{
-		m_sparse.reserve(capacity);
-	}
-
-	template <typename T>
-	void SparseSet<T>::shrink_to_fit()
-	{
-		m_dense.shrink_to_fit();
-	}
-
-	template <typename T>
-	std::size_t SparseSet<T>::capacity() const noexcept
+	auto SparseSet<T>::capacity() const noexcept
 	{
 		return m_dense.capacity();
 	}
 
 	template <typename T>
-	std::size_t SparseSet<T>::sparse_capacity() const noexcept
-	{
-		return m_sparse.capacity();
-	}
-
-	template <typename T>
-	std::size_t SparseSet<T>::size() const noexcept
+	auto SparseSet<T>::size() const noexcept
 	{
 		return m_dense.size();
 	}
 
 	template <typename T>
-	std::size_t SparseSet<T>::sparse_size() const noexcept
+	bool SparseSet<T>::is_empty() const noexcept
 	{
-		return m_sparse.size();
+		return m_dense.empty();
+	}
+
+	template <typename T>
+	bool SparseSet<T>::is_full() const noexcept
+	{
+		return m_dense.size() >= m_dense.capacity();
+	}
+
+	template <typename T>
+	bool SparseSet<T>::has_element(const size_type index) const noexcept
+	{
+		return (index < m_sparse.size() && m_sparse[index]);
+	}
+
+	template <typename T>
+	typename SparseSet<T>::const_iterator_type SparseSet<T>::cbegin() const noexcept
+	{
+		return { m_dense, 0 };
+	}
+
+	template <typename T>
+	typename SparseSet<T>::const_iterator_type SparseSet<T>::cend() const noexcept
+	{
+		return { m_dense, m_dense.size() };
+	}
+
+	template <typename T>
+	typename SparseSet<T>::iterator_type SparseSet<T>::begin() noexcept
+	{
+		return { m_dense, 0 };
+	}
+
+	template <typename T>
+	typename SparseSet<T>::iterator_type SparseSet<T>::end() noexcept
+	{
+		return { m_dense, m_dense.size() };
+	}
+
+	template <typename T>
+	typename SparseSet<T>::element_type* SparseSet<T>::get_element_pointer(const size_type index) noexcept
+	{
+		return has_element(index) ? m_sparse[index] : nullptr;
+	}
+
+	template <typename T>
+	const typename SparseSet<T>::element_type* SparseSet<T>::get_element_pointer(const size_type index) const noexcept
+	{
+		return has_element(index) ? m_sparse[index] : nullptr;
 	}
 
 	template <typename T>

@@ -4,17 +4,21 @@
 
 using namespace sigma;
 
-TEST(SparseSet, Construction_Default)
+TEST(SparseSet, construction_default)
 {
-	auto set = SparseSet<int>();
+	const auto set = SparseSet<int>();
+	ASSERT_EQ(set.capacity(), 0);
+	ASSERT_TRUE(set.is_empty());
 }
 
-TEST(SparseSet, Construction_WithReservation)
+TEST(SparseSet, construction_with_reservation)
 {
-	auto set = SparseSet<int>(10);
+	const auto set = SparseSet<int>(10);
+	ASSERT_EQ(set.capacity(), 10);
+	ASSERT_TRUE(set.is_empty());
 }
 
-TEST(SparseSet, Reserve)
+TEST(SparseSet, reserve)
 {
 	auto set = SparseSet<int>();
 	set.reserve(10);
@@ -27,20 +31,7 @@ TEST(SparseSet, Reserve)
 	ASSERT_EQ(reserved_set.capacity(), 20);
 }
 
-TEST(SparseSet, SparseReserve)
-{
-	auto set = SparseSet<int>();
-	set.sparse_reserve(10);
-	ASSERT_EQ(set.sparse_capacity(), 10);
-
-	auto reserved_set = SparseSet<int>(10);
-	ASSERT_EQ(reserved_set.sparse_capacity(), 0);
-
-	reserved_set.sparse_reserve(20);
-	ASSERT_EQ(reserved_set.sparse_capacity(), 20);
-}
-
-TEST(SparseSet, Capacity)
+TEST(SparseSet, capacity)
 {
 	auto set = SparseSet<int>();
 	ASSERT_EQ(set.capacity(), 0);
@@ -49,52 +40,222 @@ TEST(SparseSet, Capacity)
 	ASSERT_EQ(set.capacity(), 20);
 }
 
-TEST(SparseSet, SparseCapacity)
-{
-	auto set = SparseSet<int>();
-	ASSERT_EQ(set.sparse_capacity(), 0);
-
-	set.sparse_reserve(20);
-	ASSERT_EQ(set.sparse_capacity(), 20);
-}
-
-TEST(SparseSet, ShrinkToFit)
-{
-	auto set = SparseSet<int>();
-	ASSERT_EQ(set.capacity(), 0);
-
-	set.reserve(10);
-	ASSERT_EQ(set.capacity(), 10);
-
-	set.shrink_to_fit();
-	ASSERT_EQ(set.capacity(), 0);
-}
-
-TEST(SparseSet, Size)
+TEST(SparseSet, size)
 {
 	auto set = SparseSet<int>();
 	ASSERT_EQ(set.size(), 0);
 
-	set.construct(1, 10);
+	set.reserve(1);
+	ASSERT_EQ(set.size(), 0);
+	
+	set.emplace(1, 10);
 	ASSERT_EQ(set.size(), 1);
 }
 
-TEST(SparseSet, SparseSize)
+TEST(SparseSet, is_empty)
 {
-	auto set = SparseSet<int>();
-	ASSERT_EQ(set.size(), 0);
+	auto set = SparseSet<int>(1);
+	ASSERT_TRUE(set.is_empty());
 
-	constexpr std::size_t index{ 1 };
-	set.construct(index, 10);
-	ASSERT_TRUE(set.sparse_size() >= index);
+	set.emplace(1, 10);
+	ASSERT_FALSE(set.is_empty());
 }
 
-TEST(SparseSet, Construct_NativeTypes)
+TEST(SparseSet, is_full)
 {
 	auto set = SparseSet<int>();
+	ASSERT_TRUE(set.is_full());
+
+	set.reserve(1);
+	ASSERT_FALSE(set.is_full());
+	
+	set.emplace(0, 10);
+	ASSERT_TRUE(set.is_full());
+}
+
+TEST(SparseSet, has_element)
+{
+	auto set = SparseSet<int>();
+	ASSERT_FALSE(set.has_element(0));
+	ASSERT_FALSE(set.has_element(1));
+
+	set.reserve(2);
+	ASSERT_FALSE(set.has_element(0));
+	ASSERT_FALSE(set.has_element(1));
+
+	set.emplace(1, 10);
+	ASSERT_FALSE(set.has_element(0));
+	ASSERT_TRUE(set.has_element(1));
+}
+
+TEST(SparseSet, get_element_nonConst)
+{
+	auto set = SparseSet<int>(5);
 	ASSERT_EQ(set.size(), 0);
 
-	set.construct(1, 10);
+	set.emplace(1, 10);
+	ASSERT_EQ(set.get_element_pointer(0), nullptr);
+	ASSERT_EQ(set.get_element_pointer(10), nullptr);
+	ASSERT_EQ(*set.get_element_pointer(1), 10);
 
+	*set.get_element_pointer(1) = 20;
+	ASSERT_EQ(set.get_element_pointer(0), nullptr);
+	ASSERT_EQ(set.get_element_pointer(10), nullptr);
+	ASSERT_EQ(*set.get_element_pointer(1), 20);
+}
+
+TEST(SparseSet, get_element_const)
+{
+	const auto set = SparseSet<int>(5);
+	ASSERT_EQ(set.size(), 0);
+	ASSERT_EQ(set.get_element_pointer(0), nullptr);
+	ASSERT_EQ(set.get_element_pointer(10), nullptr);
+}
+
+TEST(SparseSet, empalce_fundamental_types)
+{
+	auto set = SparseSet<int>(1);
+	ASSERT_EQ(set.size(), 0);
+
+	set.emplace(1, 10);
 	ASSERT_EQ(set.size(), 1);
+}
+
+TEST(SparseSet, emplace_class_type)
+{
+	struct Data
+	{
+		Data() = default;
+		Data(const int int_data, const float float_data) : int_value{ int_data }, float_value{ float_data } {};
+		int int_value{};
+		float float_value{};
+	};
+	
+	auto set = SparseSet<Data>(2);
+	ASSERT_EQ(set.size(), 0);
+
+	set.emplace(1);
+	ASSERT_EQ(set.size(), 1);
+
+	set.emplace(2, 2, 3.5f);
+	ASSERT_EQ(set.size(), 2);
+}
+
+TEST(SparseSet, emplace_constructed_object)
+{
+	struct Data
+	{
+		Data() = default;
+		Data(const int int_data, const float float_data) : int_value{ int_data }, float_value{ float_data } {};
+		int int_value{};
+		float float_value{};
+	};
+
+	auto set = SparseSet<Data>(2);
+	ASSERT_EQ(set.size(), 0);
+
+	auto data = Data();
+	set.emplace(1, data);
+	ASSERT_EQ(set.size(), 1);
+
+	set.emplace(2, 2, 3.5f);
+	ASSERT_EQ(set.size(), 2);
+}
+
+TEST(SparseSet, cbegin)
+{
+	auto set = SparseSet<int>(2);
+	ASSERT_EQ(set.size(), 0);
+
+	set.emplace(0, 10);
+	set.emplace(1, 20);
+	ASSERT_EQ(set.size(), 2);
+
+	const auto iterator = set.cbegin();
+	ASSERT_EQ(*iterator, 10);
+	ASSERT_EQ(*(iterator + 1), 20);
+}
+
+TEST(SparseSet, cend)
+{
+	auto set = SparseSet<int>(2);
+	ASSERT_EQ(set.size(), 0);
+	ASSERT_EQ(set.cbegin(), set.cend());
+
+	set.emplace(0, 10);
+	set.emplace(1, 20);
+	ASSERT_EQ(set.size(), 2);
+	
+	const auto iterator = set.cend();
+	ASSERT_EQ(*(iterator - 1), 20);
+	ASSERT_EQ(*(iterator - 2), 10);
+}
+
+TEST(SparseSet, begin)
+{
+	auto set = SparseSet<int>(2);
+	ASSERT_EQ(set.size(), 0);
+
+	set.emplace(0, 10);
+	set.emplace(1, 20);
+	ASSERT_EQ(set.size(), 2);
+
+	const auto iterator = set.begin();
+	ASSERT_EQ(*iterator, 10);
+	ASSERT_EQ(*(iterator + 1), 20);
+
+	*iterator = 11;
+	*(iterator + 1) = 22;
+	ASSERT_EQ(*iterator, 11);
+	ASSERT_EQ(*(iterator + 1), 22);
+}
+
+TEST(SparseSet, end)
+{
+	auto set = SparseSet<int>(2);
+	ASSERT_EQ(set.size(), 0);
+	ASSERT_EQ(set.begin(), set.end());
+
+	set.emplace(0, 10);
+	set.emplace(1, 20);
+	ASSERT_EQ(set.size(), 2);
+
+	const auto iterator = set.end();
+	ASSERT_EQ(*(iterator - 1), 20);
+	ASSERT_EQ(*(iterator - 2), 10);
+
+	*(iterator - 2) = 11;
+	*(iterator - 1) = 22;
+	ASSERT_EQ(*(iterator - 1), 22);
+	ASSERT_EQ(*(iterator - 2), 11);
+}
+
+TEST(SparseSet, erase)
+{
+	auto set = SparseSet<int>(5);
+	set.emplace(0, 10);
+	set.emplace(1, 11);
+	set.emplace(3, 33);
+	ASSERT_EQ(set.size(), 3);
+	ASSERT_EQ(*set.get_element_pointer(0), 10);
+	ASSERT_EQ(*set.get_element_pointer(1), 11);
+	ASSERT_EQ(set.get_element_pointer(2), nullptr);
+	ASSERT_EQ(*set.get_element_pointer(3), 33);
+	ASSERT_EQ(set.get_element_pointer(4), nullptr);
+
+	set.erase(0);
+	ASSERT_EQ(set.size(), 2);
+	ASSERT_EQ(set.get_element_pointer(0), nullptr);
+	ASSERT_EQ(*set.get_element_pointer(1), 11);
+	ASSERT_EQ(set.get_element_pointer(2), nullptr);
+	ASSERT_EQ(*set.get_element_pointer(3), 33);
+	ASSERT_EQ(set.get_element_pointer(4), nullptr);
+
+	set.emplace(0, 99);
+	ASSERT_EQ(set.size(), 3);
+	ASSERT_EQ(*set.get_element_pointer(0), 99);
+	ASSERT_EQ(*set.get_element_pointer(1), 11);
+	ASSERT_EQ(set.get_element_pointer(2), nullptr);
+	ASSERT_EQ(*set.get_element_pointer(3), 33);
+	ASSERT_EQ(set.get_element_pointer(4), nullptr);
 }
