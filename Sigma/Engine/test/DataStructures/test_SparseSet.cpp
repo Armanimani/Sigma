@@ -112,6 +112,54 @@ TEST(SparseSet, get_element_pointer_const)
 	ASSERT_EQ(set.get_element_pointer(10), nullptr);
 }
 
+TEST(SparseSet, get_element_nonConst)
+{
+	auto set = SparseSet<int>(5);
+	ASSERT_EQ(set.size(), 0);
+
+	set.emplace(1, 10);
+	ASSERT_EQ(set.get_element(1), 10);
+
+	set.get_element(1) = 20;
+	ASSERT_EQ(set.get_element(1), 20);
+}
+
+TEST(SparseSet, get_element_const)
+{
+	auto original_set = SparseSet<int>(5);
+	ASSERT_EQ(original_set.size(), 0);
+	original_set.emplace(1, 10);
+	
+	[](const SparseSet<int>& set)
+	{
+		ASSERT_EQ(set.get_element(1), 10);
+	}(original_set);
+}
+
+TEST(SparseSet, operatorBracket_nonConst)
+{
+	auto set = SparseSet<int>(5);
+	ASSERT_EQ(set.size(), 0);
+
+	set.emplace(1, 10);
+	ASSERT_EQ(set[1], 10);
+
+	set.get_element(1) = 20;
+	ASSERT_EQ(set[1], 20);
+}
+
+TEST(SparseSet, operatorBracket_const)
+{
+	auto original_set = SparseSet<int>(5);
+	ASSERT_EQ(original_set.size(), 0);
+	original_set.emplace(1, 10);
+
+	[](const SparseSet<int>& set)
+	{
+		ASSERT_EQ(set[1], 10);
+	}(original_set);
+}
+
 TEST(SparseSet, empalce_fundamental_types)
 {
 	auto set = SparseSet<int>(1);

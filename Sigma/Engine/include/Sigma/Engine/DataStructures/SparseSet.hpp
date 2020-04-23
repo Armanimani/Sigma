@@ -45,6 +45,12 @@ namespace sigma
 		[[nodiscard]] element_type* get_element_pointer(size_type index) noexcept;
 		[[nodiscard]] const element_type* get_element_pointer(size_type index) const noexcept;
 
+		[[nodiscard]] element_type& get_element(size_type index) noexcept;
+		[[nodiscard]] const element_type& get_element(size_type index) const noexcept;
+
+		[[nodiscard]] element_type& operator[](size_type index) noexcept;
+		[[nodiscard]] const element_type& operator[](size_type index) const noexcept;
+
 		void clear();
 	private:		
 		std::vector<element_type> m_dense{};
@@ -187,6 +193,30 @@ namespace sigma
 	const typename SparseSet<T>::element_type* SparseSet<T>::get_element_pointer(const size_type index) const noexcept
 	{
 		return has_element(index) ? m_sparse[index] : nullptr;
+	}
+
+	template <typename T>
+	typename SparseSet<T>::element_type& SparseSet<T>::get_element(const size_type index) noexcept
+	{
+		return *m_sparse[index];
+	}
+
+	template <typename T>
+	const typename SparseSet<T>::element_type& SparseSet<T>::get_element(const size_type index) const noexcept
+	{
+		return *m_sparse[index];
+	}
+
+	template <typename T>
+	typename SparseSet<T>::element_type& SparseSet<T>::operator[](const size_type index) noexcept
+	{
+		return *m_sparse[index];
+	}
+
+	template <typename T>
+	const typename SparseSet<T>::element_type& SparseSet<T>::operator[](const size_type index) const noexcept
+	{
+		return *m_sparse[index];
 	}
 
 	template <typename T>
