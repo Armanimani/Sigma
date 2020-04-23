@@ -78,6 +78,15 @@ namespace sigma
 		}
 
 		auto item_address = m_sparse[index];
+		
+		const auto reference_count = std::count(m_sparse.cbegin(), m_sparse.cend(), item_address);
+		assert(reference_count != 0);
+		if (reference_count > 1)
+		{
+			m_sparse[index] = nullptr;
+			return;
+		}
+		
 		auto back_address = &m_dense.back();
 		std::swap(*item_address, *back_address);
 
