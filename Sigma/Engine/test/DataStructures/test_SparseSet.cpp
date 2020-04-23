@@ -259,3 +259,52 @@ TEST(SparseSet, erase)
 	ASSERT_EQ(*set.get_element_pointer(3), 33);
 	ASSERT_EQ(set.get_element_pointer(4), nullptr);
 }
+
+TEST(SparseSet, add_reference)
+{
+	auto set = SparseSet<int>(7);
+	set.emplace(0, 10);
+	ASSERT_EQ(set.size(), 1);
+	ASSERT_EQ(*set.get_element_pointer(0), 10);
+	
+	set.emplace(1, 11);
+	ASSERT_EQ(set.size(), 2);
+	ASSERT_EQ(*set.get_element_pointer(1), 11);
+	
+	set.add_reference(2, 0);
+	ASSERT_EQ(set.size(), 2);
+	ASSERT_EQ(*set.get_element_pointer(2), 10);
+	
+	set.emplace(3, 33);
+	ASSERT_EQ(set.size(), 3);
+	ASSERT_EQ(*set.get_element_pointer(3), 33);
+	
+	set.add_reference(4, 0);
+	ASSERT_EQ(set.size(), 3);
+	ASSERT_EQ(*set.get_element_pointer(4), 10);
+	
+	set.add_reference(5, 6);
+	ASSERT_EQ(set.size(), 3);
+	ASSERT_EQ(set.get_element_pointer(5), nullptr);
+	
+	set.erase(6);
+	ASSERT_EQ(set.size(), 3);
+	
+	set.erase(5);
+	ASSERT_EQ(set.size(), 3);
+	
+	set.erase(4);
+	ASSERT_EQ(set.size(), 3);
+	
+	set.erase(3);
+	ASSERT_EQ(set.size(), 2);
+	
+	set.erase(2);
+	ASSERT_EQ(set.size(), 2);
+	
+	set.erase(1);
+	ASSERT_EQ(set.size(), 1);
+	
+	set.erase(0);
+	ASSERT_EQ(set.size(), 0);
+}

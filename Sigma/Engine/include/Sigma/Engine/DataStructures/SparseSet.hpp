@@ -23,6 +23,7 @@ namespace sigma
 
 		template <typename... Args>
 		void emplace(size_type index, Args&& ...args);
+		void add_reference(size_type index, size_type reference_index) noexcept;
 
 		void erase(size_type index) noexcept;
 
@@ -67,6 +68,12 @@ namespace sigma
 		
 		m_dense.emplace_back(std::forward<Args>(args)...);	
 		safe_assignment(m_sparse, index, &m_dense.back());
+	}
+
+	template <typename T>
+	void SparseSet<T>::add_reference(const size_type index, const size_type reference_index) noexcept
+	{
+		safe_assignment(m_sparse, index, get_element_pointer(reference_index));
 	}
 
 	template <typename T>
