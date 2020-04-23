@@ -88,7 +88,7 @@ TEST(SparseSet, has_element)
 	ASSERT_TRUE(set.has_element(1));
 }
 
-TEST(SparseSet, get_element_nonConst)
+TEST(SparseSet, get_element_pointer_nonConst)
 {
 	auto set = SparseSet<int>(5);
 	ASSERT_EQ(set.size(), 0);
@@ -104,7 +104,7 @@ TEST(SparseSet, get_element_nonConst)
 	ASSERT_EQ(*set.get_element_pointer(1), 20);
 }
 
-TEST(SparseSet, get_element_const)
+TEST(SparseSet, get_element_pointer_const)
 {
 	const auto set = SparseSet<int>(5);
 	ASSERT_EQ(set.size(), 0);
