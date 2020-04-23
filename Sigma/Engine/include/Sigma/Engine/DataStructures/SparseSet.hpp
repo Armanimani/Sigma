@@ -57,7 +57,7 @@ namespace sigma
 		std::vector<element_type*> m_sparse{};
 	};
 
-
+	
 	template <typename T>
 	SparseSet<T>::SparseSet(const size_type capacity)
 	{
