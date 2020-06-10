@@ -1,2 +1,2 @@
 # Sigma
-![](https://github.com/ArmanImani/Sigma/workflows/Build/badge.svg)
+![](https://github.com/ArmanImani/Blaze/workflows/CI/badge.svg)
